@@ -11,6 +11,8 @@ export default function HomePage() {
 
     if (!token) {
       router.push('/login'); // Redireciona para login se não houver token
+    } else {
+      router.push('/dashboard')
     }
   }, [router]);
 
