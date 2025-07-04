@@ -2,7 +2,6 @@
 
 import { buscaEstoques, Estoque } from '@/app/data/service/EstoqueService';
 import Estoques from '@/app/ui/components/componentsResults/Estoques';
-import { Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 export default function EstoquesPage() {

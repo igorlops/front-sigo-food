@@ -41,10 +41,10 @@ export default function Produtos() {
                     {produtos.map((produto) => (
                         <ListItem key={produto.id}>
                             {
-                                produto.image_product ?
+                                produto.image_path ?
                                     (
                                         <>
-                                            <img className="object-cover top-0 w-[200px] h-[200px]" src={`http://localhost:8000/uploads/${produto.image_product[0].image_name}`}/>
+                                            <img className="object-cover top-0 w-[200px] h-[200px]" src={`http://localhost:8000/uploads/${produto.image_path[0].image_name}`}/>
                                         </>
                                     ) : (
                                         <>

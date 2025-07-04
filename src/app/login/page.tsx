@@ -5,7 +5,6 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { login } from "@/app/data/service/authService";
 import { useAuth } from "../data/context/AuthContext";
 
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,27 +14,37 @@ export default function Login() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); // Limpa mensagens de erro anteriores
-    setLoading(true)
-    try {        
-      const response = await login(email, password);
-        console.log("Erro encontrado:")
-        console.log(response?.data.error)
-        console.log(response?.data.data)
-        if(!response?.data.error) {
-          let data = response?.data.data;
-          let token = data?.token;
-          setLogin(token || '', data?.user.name || '', data?.user.email || '');
+    setError("");
+    setLoading(true);
 
-          // router.push('/dashboard')
-          setLoading(false)
-        }
-        else {
-        }
+    try {
+      const response = await login(email, password);
+      const data = response?.data?.data;
+
+      if (!response?.data?.error && data?.token) {
+        const token = data.token;
+        const user = data.user;
+
+        // Atualiza contexto (caso seu AuthContext use isso)
+        setLogin(token, user);
+
+        // Salva no localStorage
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+
+        setLoading(false);
+
+        // Redirecionar, se quiser:
+        // router.push('/dashboard');
+      } else {
+        setError("Credenciais inválidas.");
+        setLoading(false);
+      }
     } catch (error) {
-      console.error("Erro ao fazer login: ",error)   
+      console.error("Erro ao fazer login: ", error);
+      setError("Erro ao conectar com o servidor.");
+      setLoading(false);
     }
-    
   };
 
   return (
@@ -90,11 +99,9 @@ export default function Login() {
           variant="contained"
           color="primary"
           className="mt-4"
-          loading={loading}
-          loadingPosition="center"
           disabled={loading}
         >
-          Entrar
+          {loading ? "Entrando..." : "Entrar"}
         </Button>
         <Typography
           variant="body2"

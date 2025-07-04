@@ -3,7 +3,6 @@
 import { buscaClientes, Cliente } from '@/app/data/service/ClienteService';
 import Clientes from '@/app/ui/components/componentsResults/Clientes';
 import FormClientes from '@/app/ui/components/forms/Clientes';
-import { Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 export default function ClientesPage() {

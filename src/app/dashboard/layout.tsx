@@ -18,8 +18,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton'; // Adicionado para MiniDrawer
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox'; // Exemplo de ícone, pode remover
-import MailIcon from '@mui/icons-material/Mail'; // Exemplo de ícone, pode remover
 
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../data/context/AuthContext'; // Verifique o caminho correto

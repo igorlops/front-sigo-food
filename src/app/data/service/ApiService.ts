@@ -1,6 +1,6 @@
+// ApiService.ts
 "use client"
 import axios from 'axios';
-import { useAuthUtils } from '../hooks/useAuth';
 
 export const ApiService = axios.create({
     baseURL: 'http://localhost:8000/api',
@@ -10,8 +10,9 @@ export const ApiService = axios.create({
     },
 });
 
+// Adiciona o token antes de cada requisição
 ApiService.interceptors.request.use((config) => {
-    const token = useAuthUtils().getToken();
+    const token = localStorage.getItem('token'); // <-- direto do localStorage
     if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -20,13 +21,15 @@ ApiService.interceptors.request.use((config) => {
     return Promise.reject(error);
 });
 
+// Interceptor para tratar erros
 ApiService.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            // Token inválido ou expirado
-            useAuthUtils().removeToken();
-            window.location.href = '/login'; // Redireciona para a página de login
+            // Remove token inválido e redireciona
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
         }
         return Promise.reject(error);
     }
