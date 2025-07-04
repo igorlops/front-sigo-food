@@ -9,10 +9,14 @@ interface responseData {
 
 export interface Pedido {
     id: number;
-    value: number,
-    number_of_installments: number,
-    id_payment: number,
-    id_client: number
+    restaurant_id: number;
+    client_id: number;
+    payment_method_id: number;
+    status: number;
+    order_type: number;
+    delivery_fee: number;
+    total_value: number;
+    delivery_address: number;
     created_at: Date;
     updated_at: Date;
 }

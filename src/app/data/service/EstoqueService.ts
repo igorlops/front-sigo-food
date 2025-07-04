@@ -31,3 +31,14 @@ export async function buscaEstoques(): Promise<responseData | null> {
         return null;
     }
 }
+
+export async function adicionaEstoque(id_product: number | null,quantity: number | null): Promise<{ data: DataEstoque} | null> {
+    try {
+        const response = await ApiService;
+        return response.post('/stocks',JSON.stringify({ id_product, quantity }));
+
+    } catch (error) {
+        console.error('Erro ao adicionar estoque:', error);
+        return null;
+    }
+}

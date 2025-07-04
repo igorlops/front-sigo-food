@@ -9,12 +9,10 @@ interface responseData {
 
 export interface Cliente {
     id: number;
-    first_name: string;
-    last_name: string;
-    cpf: string;
-    date_of_birth: Date;
-    telefone: string;
+    restaurant_id: string;
+    name: string;
     email: string;
+    phone: string;
     created_at: Date;
     updated_at: Date;
 }
@@ -36,7 +34,7 @@ export async function buscaClientes(): Promise<responseData | null> {
     }
 }
 
-export async function adicionaCliente(first_name: string,last_name: string,cpf: string,date_of_birth: Date,telefone: string,email: string): Promise<{ data: DataCliente} | null> {
+export async function adicionaCliente(first_name: string,last_name: string,cpf: string,date_of_birth: string,telefone: string,email: string): Promise<{ data: DataCliente} | null> {
     try {
         const response = await ApiService;
         return response.post('/clients',JSON.stringify({ first_name,last_name,cpf,date_of_birth,telefone,email }));

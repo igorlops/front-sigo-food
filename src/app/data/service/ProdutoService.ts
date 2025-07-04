@@ -13,10 +13,11 @@ interface imagesName {
 export interface Produto {
     id: number;
     name: string;
-    description: string,
-    id_category: number,
-    name_category: string,
-    image_product: Array<imagesName>,
+    category_id: number;
+    description: string;
+    price: Array<imagesName>;
+    status: Array<imagesName>;
+    image_path: Array<imagesName>;
     created_at: Date;
     updated_at: Date;
 }

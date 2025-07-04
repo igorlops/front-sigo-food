@@ -2,34 +2,38 @@
 
 import { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { login,AuthService } from "@/app/data/service/authService";
+import { login } from "@/app/data/service/authService";
 import { useAuth } from "../data/context/AuthContext";
-import { useRouter } from "next/navigation";
 
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
   const { setLogin } = useAuth();
-
-  const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(""); // Limpa mensagens de erro anteriores
-
-    try {
-        const response = await login(email, password);
+    setLoading(true)
+    try {        
+      const response = await login(email, password);
+        console.log("Erro encontrado:")
+        console.log(response?.data.error)
+        console.log(response?.data.data)
         if(!response?.data.error) {
           let data = response?.data.data;
           let token = data?.token;
-          setLogin(token || '');
+          setLogin(token || '', data?.user.name || '', data?.user.email || '');
 
-          router.push('/dashboard')
+          // router.push('/dashboard')
+          setLoading(false)
+        }
+        else {
         }
     } catch (error) {
-        
+      console.error("Erro ao fazer login: ",error)   
     }
     
   };
@@ -86,6 +90,9 @@ export default function Login() {
           variant="contained"
           color="primary"
           className="mt-4"
+          loading={loading}
+          loadingPosition="center"
+          disabled={loading}
         >
           Entrar
         </Button>

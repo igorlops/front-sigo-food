@@ -10,7 +10,7 @@ interface responseData {
 export interface ImagemProduto {
     id: number;
     image_name: string;
-    id_product: number;
+    product_id: number;
     created_at: Date;
     updated_at: Date;
 }

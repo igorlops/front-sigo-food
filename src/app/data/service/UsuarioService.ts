@@ -11,6 +11,7 @@ export interface Usuario {
     id: number;
     name: string;
     email: string;
+    restaurant_id: number;
     created_at: Date;
     updated_at: Date;
 }

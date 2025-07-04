@@ -1,52 +1,34 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { Typography, List, ListItem, ListItemText } from "@mui/material";
-import { buscaClientes, Cliente } from "@/app/data/service/ClienteService";
+import { Cliente } from '@/app/data/service/ClienteService';
+import { Typography, Grid2 } from '@mui/material';
 
-// Definir a interface Categoria
+interface ClientesProps {
+  clientes: Cliente[];
+  error: boolean;
+}
 
-export default function Clientes() {
-    // Especificar o tipo de estado corretamente
-    const [clientes, setClientes] = useState<Cliente[]>([]); // Agora o estado é um array de Categoria
-    const [error, setError] = useState(false);
-
-    useEffect(() => {
-        // Função assíncrona para buscar clientes
-        async function fetchClientes() {
-            try {
-                const response = await buscaClientes();
-                console.log(response?.data)
-                if (response?.data) {
-                    setClientes(response.data.data); // Atualiza o estado com as clientes
-                }
-            } catch (err) {
-                console.error("Erro ao buscar clientes:", err);
-                setError(true);
-            }
-        }
-
-        fetchClientes();
-    }, []); // O array vazio garante que a função execute apenas uma vez
-
-    return (
-        <>
-            <Typography component="h2" variant="h5">
-                Componentes de clientes
-            </Typography>
-            {error ? (
-                <Typography component="p" color="error">
-                    Não foi possível carregar as clientes.
-                </Typography>
-            ) : (
-                <List>
-                    {clientes.map((cliente) => (
-                        <ListItem key={cliente.id}>
-                            <ListItemText primary={cliente.first_name+" "+cliente.last_name} />
-                        </ListItem>
-                    ))}
-                </List>
-            )}
-        </>
-    );
+export default function Clientes({ clientes, error }: ClientesProps) {
+  return (
+    <>
+      <Typography component="h2" variant="h5">
+        Componentes de Clientes
+      </Typography>
+      {error ? (
+        <Typography component="p" color="error">
+          Não foi possível carregar as Clientes.
+        </Typography>
+      ) : (
+        <Grid2 container>
+          {clientes.map((cliente) => (
+            <Grid2 size={{ xs: 2, sm: 4, md: 4 }} key={cliente.id}>
+              <Typography component="p" variant="body2">
+                {cliente.first_name}
+              </Typography>
+            </Grid2>
+          ))}
+        </Grid2>
+      )}
+    </>
+  );
 }

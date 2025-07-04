@@ -7,17 +7,19 @@ import { useRouter } from "next/navigation";
 
 // Definir a interface Categoria
 
-export default function FormClientes() {
+interface FormClientesProps {
+  onSuccess: () => void
+}
+
+export default function FormClientes({onSuccess}:FormClientesProps) {
     const [first_name, setFirstName] = useState("");
     const [last_name, setLastName] = useState("");
     const [cpf, setCpf] = useState("");
-    const [date_of_birth, setDateOfBirth] = useState(new Date);
+    const [date_of_birth, setDateOfBirth] = useState("");
     const [telefone, setTelefone] = useState("");
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
-  
-    const router = useRouter()
-  
+
     const handleCliente = async (e: React.FormEvent) => {
       e.preventDefault();
       setError(""); // Limpa mensagens de erro anteriores
@@ -25,18 +27,21 @@ export default function FormClientes() {
       try {
           const response = await adicionaCliente(first_name,last_name,cpf,date_of_birth,telefone,email);
           if(!response?.data.error) {
-            let data = response?.data.data;
-  
-            router.push('/dashboard/clients')
+            setFirstName("")
+            setLastName("")
+            setCpf("")
+            setDateOfBirth("")
+            setTelefone("") 
+            setEmail("")
+            onSuccess();
           }
       } catch (error) {
-          console.error(error)
+          setError("Erro ao adicionar cliente")
       }
       
     };
   
     return (
-      <div className="flex justify-center items-center bg-gray-100">
         <Box
           className="p-8 bg-white rounded-lg shadow-md w-full max-w-md"
           component="form"
@@ -99,7 +104,10 @@ export default function FormClientes() {
             fullWidth
             type="date"
             value={date_of_birth}
-            onChange={(e) => setDateOfBirth(new Date(e.target.value))}
+            onChange={(e) => setDateOfBirth(e.target.value)}
+            InputLabelProps={{
+              shrink: true, // Garante que o label não sobreponha o campo
+            }}
             required
           />
           <TextField
@@ -131,6 +139,5 @@ export default function FormClientes() {
             Adicionar
           </Button>
         </Box>
-      </div>
     );
 }

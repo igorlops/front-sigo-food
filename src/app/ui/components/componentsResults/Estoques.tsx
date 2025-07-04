@@ -1,52 +1,34 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { buscaEstoques, Estoque } from "@/app/data/service/EstoqueService";
-import { Typography, List, ListItem, ListItemText } from "@mui/material";
+import { Estoque } from '@/app/data/service/EstoqueService';
+import { Typography, Grid2 } from '@mui/material';
 
-// Definir a interface Estoque
+interface EstoquesProps {
+  estoques: Estoque[];
+  error: boolean;
+}
 
-export default function Estoques() {
-    // Especificar o tipo de estado corretamente
-    const [estoques, setEstoques] = useState<Estoque[]>([]); // Agora o estado é um array de Estoque
-    const [error, setError] = useState(false);
-
-    useEffect(() => {
-        // Função assíncrona para buscar Estoques
-        async function fetchEstoques() {
-            try {
-                const response = await buscaEstoques();
-                console.log(response?.data)
-                if (response?.data) {
-                    setEstoques(response.data.data); // Atualiza o estado com as Estoques
-                }
-            } catch (err) {
-                console.error("Erro ao buscar Estoques:", err);
-                setError(true);
-            }
-        }
-
-        fetchEstoques();
-    }, []); // O array vazio garante que a função execute apenas uma vez
-
-    return (
-        <>
-            <Typography component="h2" variant="h5">
-                Componentes de Estoques
-            </Typography>
-            {error ? (
-                <Typography component="p" color="error">
-                    Não foi possível carregar as Estoques.
-                </Typography>
-            ) : (
-                <List>
-                    {estoques.map((estoque) => (
-                        <ListItem key={estoque.id}>
-                            <ListItemText primary={estoque.quantity} />
-                        </ListItem>
-                    ))}
-                </List>
-            )}
-        </>
-    );
+export default function Estoques({ estoques, error }: EstoquesProps) {
+  return (
+    <>
+      <Typography component="h2" variant="h5">
+        Componentes de estoques
+      </Typography>
+      {error ? (
+        <Typography component="p" color="error">
+          Não foi possível carregar as estoques.
+        </Typography>
+      ) : (
+        <Grid2 container>
+          {estoques.map((estoque) => (
+            <Grid2 size={{ xs: 2, sm: 4, md: 4 }} key={estoque.id}>
+              <Typography component="p" variant="body2">
+                {estoque.id_product}
+              </Typography>
+            </Grid2>
+          ))}
+        </Grid2>
+      )}
+    </>
+  );
 }

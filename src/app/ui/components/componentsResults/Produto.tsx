@@ -44,7 +44,7 @@ export default function Produtos() {
                                 produto.image_product ?
                                     (
                                         <>
-                                            <img width={200} src={`http://localhost:8000/uploads/${produto.image_product[0].image_name}`}/>
+                                            <img className="object-cover top-0 w-[200px] h-[200px]" src={`http://localhost:8000/uploads/${produto.image_product[0].image_name}`}/>
                                         </>
                                     ) : (
                                         <>

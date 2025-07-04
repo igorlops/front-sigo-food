@@ -1,79 +1,61 @@
-import { useEffect, useState } from "react";
-import { adicionaCategoria, Categoria,  } from "@/app/data/service/CategoriaService";
-import { Typography, Grid2, TextField, Button, Box } from "@mui/material";
-import { useRouter } from "next/navigation";
+'use client';
 
-// Definir a interface Categoria
+import { useState } from 'react';
+import { adicionaCategoria } from '@/app/data/service/CategoriaService';
+import { Typography, Box, TextField, Button } from '@mui/material';
 
-export default function FormCategorias() {
-    const [name, setName] = useState("");
-    const [error, setError] = useState("");
-  
-    const router = useRouter()
-  
-    const handleCategoria = async (e: React.FormEvent) => {
-      e.preventDefault();
-      setError(""); // Limpa mensagens de erro anteriores
-  
-      try {
-          const response = await adicionaCategoria(name);
-          if(!response?.data.error) {
-            let data = response?.data.data;
-  
-            router.push('/dashboard/categorias')
-          }
-      } catch (error) {
-          console.error(error)
+interface FormCategoriasProps {
+  onSuccess: () => void;
+}
+
+export default function FormCategorias({ onSuccess }: FormCategoriasProps) {
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
+
+  const handleCategoria = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await adicionaCategoria(name);
+      if (!response?.data.error) {
+        setName('');
+        onSuccess(); // Atualiza a lista de categorias
       }
-      
-    };
-  
-    return (
-      <div className="flex justify-center items-center bg-gray-100">
-        <Box
-          className="p-8 bg-white rounded-lg shadow-md w-full max-w-md"
-          component="form"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-          }}
-          onSubmit={handleCategoria}
-          noValidate
-          autoComplete="off"
-        >
-          <Typography
-            variant="h5"
-            className="text-gray-800 font-bold text-center mb-4"
-          >
-            Adicionar categoria
-          </Typography>
-  
-          {error && (
-            <Typography variant="body2" color="error" className="text-center">
-              {error}
-            </Typography>
-          )}
-  
-          <TextField
-            id="name"
-            label="Nome da categoria"
-            variant="outlined"
-            fullWidth
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className="mt-4"
-          >
-            Adicionar
-          </Button>
-        </Box>
-      </div>
-    );
+    } catch (error) {
+      console.error(error);
+      setError('Erro ao adicionar a categoria.');
+    }
+  };
+
+  return (
+    <Box
+      component="form"
+      onSubmit={handleCategoria}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        maxWidth: 400,
+        margin: '0 auto',
+      }}
+    >
+      <Typography variant="h5">Adicionar categoria</Typography>
+      {error && (
+        <Typography variant="body2" color="error">
+          {error}
+        </Typography>
+      )}
+      <TextField
+        label="Nome da categoria"
+        variant="outlined"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+      <Button type="submit" variant="contained" color="primary">
+        Adicionar
+      </Button>
+    </Box>
+  );
 }

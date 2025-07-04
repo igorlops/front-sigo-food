@@ -10,6 +10,7 @@ interface responseData {
 export interface Categoria {
     id: number;
     name: string;
+    restaurant_id: number;
     created_at: Date;
     updated_at: Date;
 }
