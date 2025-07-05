@@ -2,11 +2,14 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-
+type TypeUser = {
+  name: string;
+  email:string
+}
 interface AuthContextProps {
-  user: any;
+  user: TypeUser | null;
   token: string | null;
-  setLogin: (token: string, user: any) => void;
+  setLogin: (token: string, user: TypeUser) => void;
   setLogout: () => void;
 }
 
@@ -14,7 +17,7 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<TypeUser | null>(null);
 
   useEffect(() => {
     // Recupera do localStorage no carregamento inicial
@@ -25,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
 
-  const setLogin = (newToken: string, newUser: any) => {
+  const setLogin = (newToken: string, newUser: TypeUser) => {
     localStorage.setItem('token', newToken);
     localStorage.setItem('user', JSON.stringify(newUser));
     setToken(newToken);

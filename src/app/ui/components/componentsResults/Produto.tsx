@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { buscaProdutos, Produto } from "@/app/data/service/ProdutoService";
 import { Typography, List, ListItem, ListItemText } from "@mui/material";
+import Image from "next/image";
 
 export default function Produtos() {
     // Especificar o tipo de estado corretamente
@@ -44,7 +45,7 @@ export default function Produtos() {
                                 produto.image_path ?
                                     (
                                         <>
-                                            <img className="object-cover top-0 w-[200px] h-[200px]" src={`http://localhost:8000/uploads/${produto.image_path[0].image_name}`}/>
+                                            <Image alt={`${produto.name}`} className="object-cover top-0 w-[200px] h-[200px]" src={`http://localhost:8000/uploads/${produto.image_path}`}/>
                                         </>
                                     ) : (
                                         <>

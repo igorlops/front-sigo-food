@@ -26,7 +26,7 @@ export default function ImagemProdutos(productID:number) {
         }
 
         fetchImagemProdutos();
-    }, []); // O array vazio garante que a função execute apenas uma vez
+    }, [productID]); // O array vazio garante que a função execute apenas uma vez
 
     return (
         <>

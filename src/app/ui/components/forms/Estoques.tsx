@@ -48,7 +48,7 @@ export default function FormEstoques({ onSuccess }: FormEstoquesProps) {
         onSuccess();
       }
     } catch (error) {
-      setError("Erro ao adicionar Estoque");
+      setError("Erro ao adicionar Estoque "+error);
     }
   };
 

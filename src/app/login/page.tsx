@@ -4,8 +4,10 @@ import { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { login } from "@/app/data/service/authService";
 import { useAuth } from "../data/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -16,7 +18,7 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
-
+    
     try {
       const response = await login(email, password);
       const data = response?.data?.data;
@@ -35,7 +37,7 @@ export default function Login() {
         setLoading(false);
 
         // Redirecionar, se quiser:
-        // router.push('/dashboard');
+        router.push('/dashboard');
       } else {
         setError("Credenciais inválidas.");
         setLoading(false);

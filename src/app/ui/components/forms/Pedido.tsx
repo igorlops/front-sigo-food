@@ -42,10 +42,10 @@ export default function Pedidos() {
                 <List>
                     {pedidos.map((pedido) => (
                         <ListItem key={pedido.id}>
-                            <ListItemText primary={pedido.value} />
-                            <ListItemText primary={pedido.number_of_installments} />
-                            <ListItemText primary={pedido.id_payment} />
-                            <ListItemText primary={pedido.id_client} />
+                            <ListItemText primary={pedido.total_value} />
+                            <ListItemText primary={pedido.payment_method_id} />
+                            <ListItemText primary={pedido.status} />
+                            <ListItemText primary={pedido.client_id} />
                         </ListItem>
                     ))}
                 </List>

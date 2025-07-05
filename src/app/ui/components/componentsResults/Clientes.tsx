@@ -23,7 +23,7 @@ export default function Clientes({ clientes, error }: ClientesProps) {
           {clientes.map((cliente) => (
             <Grid2 size={{ xs: 2, sm: 4, md: 4 }} key={cliente.id}>
               <Typography component="p" variant="body2">
-                {cliente.first_name}
+                {cliente.name}
               </Typography>
             </Grid2>
           ))}

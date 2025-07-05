@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { Typography, List, ListItem, ListItemText, Box, TextField, Button } from "@mui/material";
+import { useState } from "react";
+import { Typography,  Box, TextField, Button } from "@mui/material";
 import { adicionaCliente } from "@/app/data/service/ClienteService";
-import { useRouter } from "next/navigation";
 
 // Definir a interface Categoria
 
@@ -36,7 +35,7 @@ export default function FormClientes({onSuccess}:FormClientesProps) {
             onSuccess();
           }
       } catch (error) {
-          setError("Erro ao adicionar cliente")
+          setError("Erro ao adicionar cliente" + error)
       }
       
     };
