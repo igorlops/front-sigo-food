@@ -17,10 +17,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Drawer, AppBar, DrawerHeader } from '../ui/components/itens/AppBarMenu'
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../data/context/AuthContext'; // Verifique o caminho correto
 import { ReactNode } from 'react';
-import { AccountBox, AddBox, Category, Groups, Inventory, ListAlt, Logout } from '@mui/icons-material';
-import { Avatar, Button, Popper, useTheme } from '@mui/material';
+import { AccountBox, AddBox, Category, Groups, Inventory, ListAlt} from '@mui/icons-material';
+
+import { useTheme } from '@mui/material';
+import ProfileComponent from '../ui/components/itens/ProfileComponent';
 
 
 // ---
@@ -29,12 +30,9 @@ import { Avatar, Button, Popper, useTheme } from '@mui/material';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const { setLogout } = useAuth();
   const theme = useTheme(); // Para usar as direções do tema no ícone da seta
   const [open, setOpen] = React.useState(false); // Estado para controlar a abertura/fechamento do drawer
   const [user, setUser] = React.useState<any>(null);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [openPopper, setOpenPopper] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const localUser = localStorage.getItem('user');
@@ -56,14 +54,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         console.log(parsedUser)
         setUser(parsedUser);
         console.log(user)
+      } else {
+        router.push('/login')
       }
     }
   })
-
-  const handleClickPopper = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setOpenPopper(!openPopper);
-  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -71,10 +66,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   const handleDrawerClose = () => {
     setOpen(false);
-  };
-
-  const handleLogout = () => {
-    setLogout();
   };
 
   // Defina os itens do seu menu
@@ -86,12 +77,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     { text: "Usuários", icon: <AccountBox />, path: "/dashboard/usuarios" },
     { text: "Estoques", icon: <Inventory />, path: "/dashboard/estoques" },
   ];
- const id = openPopper ? 'simple-popper' : undefined;
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline /> {/* Reset de CSS básico do Material-UI */}
 
-      <AppBar position="fixed" open={open} className='bg-amber-300 text-black'>
+      <AppBar position="fixed" open={open} sx={{display:"flex", alignItems:"center",flexDirection:"row", justifyContent:"space-between"}}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -105,19 +95,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           >
             <MenuIcon />
           </IconButton>
+          </Toolbar>
           <Typography variant="h6" noWrap component="div">
             Painel Administrativo
           </Typography>
-          <Button onClick={handleClickPopper}  aria-describedby={id} type='button'>
-            <Avatar sx={{bgcolor:"#ccc"}}>M</Avatar>
-          </Button>
-        </Toolbar>
+          <ProfileComponent user={user}/> 
       </AppBar>
-      <Popper id={id} open={open} anchorEl={anchorEl}>
-        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-          The content of the Popper.
-        </Box>
-      </Popper>
 
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
