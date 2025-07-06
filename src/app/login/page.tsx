@@ -21,7 +21,8 @@ export default function Login() {
     
     try {
       const response = await login(email, password);
-      const data = response?.data?.data;
+      const data = response?.data;
+      console.log(data)
 
       if (!response?.data?.error && data?.token) {
         const token = data.token;

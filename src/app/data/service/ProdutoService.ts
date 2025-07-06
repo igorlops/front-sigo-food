@@ -6,8 +6,14 @@ import { ApiService } from "./ApiService";
 interface responseData {
     data: DataProduto;
 }
-interface imagesName {
-    image_name: string;
+
+interface ProdutosParaInserirProps {
+    name: string | null;
+    category_id: number | null;
+    description: string | null;
+    price: string | null;
+    status: string | null;
+    image_path: File | null;
 }
 
 export interface Produto {
@@ -15,9 +21,9 @@ export interface Produto {
     name: string;
     category_id: number;
     description: string;
-    price: Array<imagesName>;
-    status: Array<imagesName>;
-    image_path: Array<imagesName>;
+    price: string;
+    status: string;
+    image_path: string;
     created_at: Date;
     updated_at: Date;
 }
@@ -35,6 +41,17 @@ export async function buscaProdutos(): Promise<responseData | null> {
         return response.get('/products');
     } catch (error) {
         console.error('Erro ao buscar produtos:', error);
+        return null;
+    }
+}
+
+export async function adicionaProdutos({name,category_id,description,price,status,image_path}:ProdutosParaInserirProps): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.post('/products',JSON.stringify({ name,category_id,description,price,status,image_path }));
+
+    } catch (error) {
+        console.error('Erro ao adicionar produto: ', error);
         return null;
     }
 }

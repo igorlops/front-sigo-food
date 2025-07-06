@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { buscaProdutos, Produto } from "@/app/data/service/ProdutoService";
-import { Typography, List, ListItem, ListItemText } from "@mui/material";
-import Image from "next/image";
+import { Typography } from "@mui/material";
+import TableComponent from "../itens/TableComponent";
+
+type ProdutoTabela = Pick<Produto, 'name' | 'description' | 'category_id'>;
 
 export default function Produtos() {
     // Especificar o tipo de estado corretamente
@@ -30,35 +32,19 @@ export default function Produtos() {
 
     return (
         <>
-            <Typography component="h2" variant="h5">
-                Componentes de Produtos
-            </Typography>
             {error ? (
                 <Typography component="p" color="error">
                     Não foi possível carregar as Produtos.
                 </Typography>
             ) : (
-                <List>
-                    {produtos.map((produto) => (
-                        <ListItem key={produto.id}>
-                            {
-                                produto.image_path ?
-                                    (
-                                        <>
-                                            <Image alt={`${produto.name}`} className="object-cover top-0 w-[200px] h-[200px]" src={`http://localhost:8000/uploads/${produto.image_path}`}/>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Typography component='p'>
-                                                Não contém imagem
-                                            </Typography>
-                                        </>
-                                    )
-                            }
-                            <ListItemText primary={produto.name} />
-                        </ListItem>
-                    ))}
-                </List>
+                <TableComponent<ProdutoTabela>
+                    data={produtos}
+                    columns={[
+                        { label: "Nome", render: (item) => item.name },
+                        { label: "Descrição", render: (item) => item.description },
+                        { label: "Categoria", render: (item) => item.category_id }
+                    ]}
+                />
             )}
         </>
     );
