@@ -20,7 +20,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../data/context/AuthContext'; // Verifique o caminho correto
 import { ReactNode } from 'react';
 import { AccountBox, AddBox, Category, Groups, Inventory, ListAlt, Logout } from '@mui/icons-material';
-import { useTheme } from '@mui/material';
+import { Avatar, Button, Popper, useTheme } from '@mui/material';
 
 
 // ---
@@ -32,6 +32,38 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { setLogout } = useAuth();
   const theme = useTheme(); // Para usar as direções do tema no ícone da seta
   const [open, setOpen] = React.useState(false); // Estado para controlar a abertura/fechamento do drawer
+  const [user, setUser] = React.useState<any>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [openPopper, setOpenPopper] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    const localUser = localStorage.getItem('user');
+    console.log(localUser)
+    if (localUser) {
+      const parsedUser = JSON.parse(localUser);
+      console.log(parsedUser)
+      setUser(parsedUser);
+      console.log(user)
+    }
+  },[])
+
+  React.useEffect(() => {
+    if(!user) {
+      const localUser = localStorage.getItem('user');
+      console.log(localUser)
+      if (localUser) {
+        const parsedUser = JSON.parse(localUser);
+        console.log(parsedUser)
+        setUser(parsedUser);
+        console.log(user)
+      }
+    }
+  })
+
+  const handleClickPopper = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setOpenPopper(!openPopper);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -54,7 +86,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     { text: "Usuários", icon: <AccountBox />, path: "/dashboard/usuarios" },
     { text: "Estoques", icon: <Inventory />, path: "/dashboard/estoques" },
   ];
-
+ const id = openPopper ? 'simple-popper' : undefined;
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline /> {/* Reset de CSS básico do Material-UI */}
@@ -76,8 +108,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <Typography variant="h6" noWrap component="div">
             Painel Administrativo
           </Typography>
+          <Button onClick={handleClickPopper}  aria-describedby={id} type='button'>
+            <Avatar sx={{bgcolor:"#ccc"}}>M</Avatar>
+          </Button>
         </Toolbar>
       </AppBar>
+      <Popper id={id} open={open} anchorEl={anchorEl}>
+        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
+          The content of the Popper.
+        </Box>
+      </Popper>
 
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
@@ -113,30 +153,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               </ListItemButton>
             </ListItem>
           ))}
-          <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-              onClick={handleLogout}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <Logout />
-              </ListItemIcon>
-              <ListItemText
-                primary="Logout"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem>
         </List>
       </Drawer>
 

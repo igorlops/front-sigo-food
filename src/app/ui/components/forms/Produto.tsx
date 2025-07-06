@@ -90,7 +90,7 @@ export default function ProdutosForm({ onSuccess }: FormProdutoProps) {
                 label="Status"
                 variant="outlined"
                 value={status}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setStatus(e.target.value)}
                 required
             />
             <Button
