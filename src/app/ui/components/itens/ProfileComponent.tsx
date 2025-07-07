@@ -1,18 +1,11 @@
 import { useAuth } from "@/app/data/context/AuthContext";
+import { UserLoginInterface } from "@/app/data/utils/const/User";
 import { Logout } from "@mui/icons-material";
 import { Avatar, Button, Icon, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 
-interface User {
-    name: string;
-    email: string;
-    photo_profile: string | null;
-    primary_color: string | null;
-    restaurant_id: number;
-    secondary_color: string | null;
-}
 interface UserProps {
-    user: User | null;
+    user: UserLoginInterface | null;
 }
 export default function ProfileComponent({user}:UserProps) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -41,20 +34,20 @@ export default function ProfileComponent({user}:UserProps) {
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                    vertical: 'top',
+                    horizontal: 'right',
                 }}
                 keepMounted
                 transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                    vertical: 'top',
+                    horizontal: 'right',
                 }}
                 open={Boolean(anchorEl)}
                 onClose={handleCloseMenuPopper}
             >
                 <MenuItem onClick={() => console.log("Clicado Profile")}>Profile</MenuItem>
                 <MenuItem onClick={() => console.log("MyAccount")}>My account</MenuItem>
-                <MenuItem onClick={handleLogout}><Icon><Logout/></Icon>Logout</MenuItem>
+                <MenuItem onClick={handleLogout} sx={{display:"flex",alignItems:"center"}}><Icon sx={{display:"flex",alignItems:"center"}}><Logout/></Icon>Logout</MenuItem>
             </Menu>
         </>
     )

@@ -22,6 +22,7 @@ import { AccountBox, AddBox, Category, Groups, Inventory, ListAlt} from '@mui/ic
 
 import { useTheme } from '@mui/material';
 import ProfileComponent from '../ui/components/itens/ProfileComponent';
+import { UserLocalStorage } from '../data/utils/const/User';
 
 
 // ---
@@ -35,30 +36,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [user, setUser] = React.useState<any>(null);
 
   React.useEffect(() => {
-    const localUser = localStorage.getItem('user');
-    console.log(localUser)
-    if (localUser) {
-      const parsedUser = JSON.parse(localUser);
-      console.log(parsedUser)
-      setUser(parsedUser);
-      console.log(user)
-    }
+    setUser(UserLocalStorage())
   },[])
-
-  React.useEffect(() => {
-    if(!user) {
-      const localUser = localStorage.getItem('user');
-      console.log(localUser)
-      if (localUser) {
-        const parsedUser = JSON.parse(localUser);
-        console.log(parsedUser)
-        setUser(parsedUser);
-        console.log(user)
-      } else {
-        router.push('/login')
-      }
-    }
-  })
 
   const handleDrawerOpen = () => {
     setOpen(true);

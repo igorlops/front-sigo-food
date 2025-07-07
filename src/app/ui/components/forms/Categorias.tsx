@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { adicionaCategoria } from '@/app/data/service/CategoriaService';
 import { Typography, Box, TextField, Button } from '@mui/material';
+import { UserLocalStorage, UserLoginInterface } from '@/app/data/utils/const/User';
 
 interface FormCategoriasProps {
   onSuccess: () => void;
@@ -11,13 +12,19 @@ interface FormCategoriasProps {
 export default function FormCategorias({ onSuccess }: FormCategoriasProps) {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
-
+  const userLocalStorage = UserLocalStorage();
+  if (!userLocalStorage || userLocalStorage.restaurant_id === null) {
+    setError("Usuário não está logado ou restaurante não encontrado.");
+    return;
+  }
+  const restaurant_id = userLocalStorage.restaurant_id;
   const handleCategoria = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     try {
-      const response = await adicionaCategoria(name);
+      const response = await adicionaCategoria(name, restaurant_id);
+
       if (!response?.data.error) {
         setName('');
         onSuccess(); // Atualiza a lista de categorias

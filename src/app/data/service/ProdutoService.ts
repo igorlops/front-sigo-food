@@ -17,13 +17,13 @@ interface ProdutosParaInserirProps {
 }
 
 export interface Produto {
-    id: number;
-    name: string;
-    category_id: number;
-    description: string;
-    price: string;
-    status: string;
-    image_path: string;
+    id: number | null;
+    name: string | null;
+    category_id: number | null;
+    description: string | null;
+    price: string | null;
+    status: string | null;
+    image_path: string | null;
     created_at: Date;
     updated_at: Date;
 }
@@ -48,7 +48,7 @@ export async function buscaProdutos(): Promise<responseData | null> {
 export async function adicionaProdutos({name,category_id,description,price,status,image_path}:ProdutosParaInserirProps): Promise<responseData | null> {
     try {
         const response = await ApiService;
-        return response.post('/products',JSON.stringify({ name,category_id,description,price,status,image_path }));
+        return response.post('/products',{ name,category_id,description,price,status,image_path });
 
     } catch (error) {
         console.error('Erro ao adicionar produto: ', error);

@@ -13,23 +13,23 @@ export default function ProdutosPage() {
   const handleClose=()=> {
     setModalVisible(false)
   }
-    const [categorias, setCategorias] = useState<Produto[]>([]);
+    const [produtos, setProdutos] = useState<Produto[]>([]);
     const [error, setError] = useState(false);
   
-    const fetchCategorias = async () => {
+    const fetchProdutos = async () => {
       try {
         const response = await buscaProdutos();
         if (response?.data) {
-          setCategorias(response.data.data);
+          setProdutos(response.data.data);
         }
       } catch (err) {
-        console.error('Erro ao buscar categorias:', err);
+        console.error('Erro ao buscar produtos:', err);
         setError(true);
       }
     };
   
     useEffect(() => {
-      fetchCategorias();
+      fetchProdutos();
     }, []); // Atualiza apenas no primeiro carregamento
   
   return (
@@ -42,7 +42,7 @@ export default function ProdutosPage() {
       </div>
       <Produtos/>
       <ModalComponent
-        content={<ProdutosForm onSuccess={fetchCategorias}/>}
+        content={<ProdutosForm onSuccess={fetchProdutos}/>}
         open={modalVisible}
         handleClose={handleClose}
       />

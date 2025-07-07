@@ -32,10 +32,14 @@ export async function buscaCategorias(): Promise<responseData | null> {
     }
 }
 
-export async function adicionaCategoria(name: string): Promise<{ data: DataCategoria} | null> {
+export async function adicionaCategoria(name: string, restaurant_id: number): Promise<{ data: DataCategoria} | null> {
     try {
         const response = await ApiService;
-        return response.post('/categories',JSON.stringify({ name }));
+        return response.post('/categories',JSON.stringify({ name, restaurant_id }), {
+            headers: {
+            'Content-Type': 'application/json',
+            },
+        });
 
     } catch (error) {
         console.error('Erro ao adicionar categoria:', error);

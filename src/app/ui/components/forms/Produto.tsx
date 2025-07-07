@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { adicionaProdutos, buscaProdutos, Produto } from "@/app/data/service/ProdutoService";
-import { Box, Button, styled, TextField, Typography } from "@mui/material";
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, styled, TextField, Typography } from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { buscaCategorias, Categoria } from "@/app/data/service/CategoriaService";
 
 interface FormProdutoProps {
     onSuccess: () => void;
@@ -17,7 +18,23 @@ export default function ProdutosForm({ onSuccess }: FormProdutoProps) {
     const [status, setStatus] = useState<string | null>(null);
     const [image_path, setImagePath] = useState<File | null>(null);
     const [error, setError] = useState('');
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
 
+    const fetchCategorias = async () => {
+        try {
+        const response = await buscaCategorias();
+        if (response?.data) {
+            setCategorias(response.data.data);
+        }
+        } catch (err) {
+        console.error('Erro ao buscar categorias:', err);
+        setError('Erro ao buscar categorias');
+        }
+    };
+
+    useEffect(() => {
+        fetchCategorias();
+    },[])
     const handleProduto = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
@@ -58,21 +75,34 @@ export default function ProdutosForm({ onSuccess }: FormProdutoProps) {
                 </Typography>
             )}
             <TextField
+                className="w-full"
                 label="Nome do produto"
                 variant="outlined"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
             />
+            <Box className="w-full">
+                <FormControl fullWidth>
+                    <InputLabel id="categorias-label">Categorias</InputLabel>
+                    <Select
+                    labelId="categorias-label"
+                    id="categoria_select"
+                    value={category_id}
+                    label="Categorias" // <- MESMO TEXTO que o InputLabel
+                    onChange={(e) => setCategoryId(Number(e.target.value))}
+                    >
+                    {categorias.map((categoria) => (
+                        <MenuItem key={categoria.id} value={categoria.id}>
+                        {categoria.name}
+                        </MenuItem>
+                    ))}
+                    </Select>
+                </FormControl>
+            </Box>
+
             <TextField
-                label="Categoria do produto"
-                variant="outlined"
-                type="number"
-                value={category_id}
-                onChange={(e) => setCategoryId(0)}
-                required
-            />
-            <TextField
+                className="w-full"
                 label="Descrição"
                 variant="outlined"
                 value={description}
@@ -80,6 +110,7 @@ export default function ProdutosForm({ onSuccess }: FormProdutoProps) {
                 required
             />
             <TextField
+                className="w-full"
                 label="Preço"
                 variant="outlined"
                 value={price}
@@ -87,6 +118,7 @@ export default function ProdutosForm({ onSuccess }: FormProdutoProps) {
                 required
             />
             <TextField
+                className="w-full"
                 label="Status"
                 variant="outlined"
                 value={status}
@@ -94,6 +126,7 @@ export default function ProdutosForm({ onSuccess }: FormProdutoProps) {
                 required
             />
             <Button
+                className="w-full"
                 component="label"
                 role={undefined}
                 variant="outlined"
@@ -111,7 +144,8 @@ export default function ProdutosForm({ onSuccess }: FormProdutoProps) {
                 }}  
             />
             </Button>
-            <Button type="submit" variant="contained" color="primary">
+                
+            <Button type="submit" variant="contained" color="primary" className="w-full">
                 Adicionar
             </Button>
         </Box>
