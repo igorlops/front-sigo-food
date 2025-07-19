@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  nextjs_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: my_nextjs_app_container
+    restart: unless-stopped # Reinicia o container se ele parar, a menos que seja parado manualmente
+    volumes:
+      - .:/app # Mapeia o diretório atual do host para /app dentro do container
+      - /app/node_modules # Impede que o node_modules do host sobrescreva o do container
+    ports:
+      - "3000:3000" # Mapeia a porta 3000 do host para a porta 3000 do container
+    environment:
+      # Variáveis de ambiente que sua aplicação Next.js precisa em tempo de execução
+      # Exemplo:
+      # NEXT_PUBLIC_API_URL: http://localhost:8080/api # Se você tiver uma API rodando no host
+      # API_SECRET_KEY: your_secret_key
+      PORT: 3000 # Definindo a porta explicitamente para o Next.js

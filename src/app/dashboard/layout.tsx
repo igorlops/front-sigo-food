@@ -22,7 +22,7 @@ import { AccountBox, AddBox, Category, Groups, Inventory, ListAlt} from '@mui/ic
 
 import { useTheme } from '@mui/material';
 import ProfileComponent from '../ui/components/itens/ProfileComponent';
-import { UserLocalStorage } from '../data/utils/const/User';
+import { UserLocalStorage, UserLoginInterface } from '../data/utils/const/User';
 
 
 // ---
@@ -33,7 +33,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const theme = useTheme(); // Para usar as direções do tema no ícone da seta
   const [open, setOpen] = React.useState(false); // Estado para controlar a abertura/fechamento do drawer
-  const [user, setUser] = React.useState<any>(null);
+  const [user, setUser] = React.useState<UserLoginInterface | null>(null);
 
   React.useEffect(() => {
     setUser(UserLocalStorage())

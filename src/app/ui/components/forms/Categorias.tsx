@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { adicionaCategoria } from '@/app/data/service/CategoriaService';
 import { Typography, Box, TextField, Button } from '@mui/material';
-import { UserLocalStorage, UserLoginInterface } from '@/app/data/utils/const/User';
+import { UserLocalStorage} from '@/app/data/utils/const/User';
 
 interface FormCategoriasProps {
   onSuccess: () => void;
@@ -46,6 +46,7 @@ export default function FormCategorias({ onSuccess }: FormCategoriasProps) {
         maxWidth: 400,
         margin: '0 auto',
       }}
+      className='px-10 py-10 rounded-xl flex flex-col gap-6 items-center w-[400px] bg-gray-100'
     >
       <Typography variant="h5">Adicionar categoria</Typography>
       {error && (

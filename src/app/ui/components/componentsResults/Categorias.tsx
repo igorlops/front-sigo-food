@@ -1,7 +1,7 @@
 'use client';
 
 import { Categoria } from '@/app/data/service/CategoriaService';
-import { Typography, Grid2, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { Typography, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
 interface CategoriasProps {
   categorias: Categoria[];
@@ -11,9 +11,6 @@ interface CategoriasProps {
 export default function Categorias({ categorias, error }: CategoriasProps) {
   return (
     <>
-      <Typography component="h2" variant="h5">
-        Componentes de categorias
-      </Typography>
       {error ? (
         <Typography component="p" color="error">
           Não foi possível carregar as categorias.

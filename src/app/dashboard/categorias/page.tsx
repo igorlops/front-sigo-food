@@ -5,10 +5,16 @@ import FormCategorias from '@/app/ui/components/forms/Categorias';
 import { buscaCategorias, Categoria } from '@/app/data/service/CategoriaService';
 import { useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
+import ButtonCreateNew from '@/app/ui/components/itens/ButtonCreateNew';
+import ModalComponent from '@/app/ui/components/itens/ModalComponent';
 
 export default function CategoriaPage() {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [error, setError] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleClose=()=> {
+    setModalVisible(false)
+  }
 
   const fetchCategorias = async () => {
     try {
@@ -31,8 +37,16 @@ export default function CategoriaPage() {
       <Typography component="h1" variant="h4">
         Página de Categorias
       </Typography>
+      <div>
+          <ButtonCreateNew description="Criar nova categoria" handleViewForm={() => setModalVisible(!modalVisible)}/>
+      </div>
       <Categorias categorias={categorias} error={error} />
-      <FormCategorias onSuccess={fetchCategorias} />
+      {/* <FormCategorias onSuccess={fetchCategorias} /> */}
+      <ModalComponent
+        content={<FormCategorias onSuccess={fetchCategorias}/>}
+        open={modalVisible}
+        handleClose={handleClose}
+      />
     </div>
   );
 }

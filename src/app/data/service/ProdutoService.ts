@@ -10,6 +10,7 @@ interface responseData {
 interface ProdutosParaInserirProps {
     name: string | null;
     category_id: number | null;
+    restaurant_id: number | null;
     description: string | null;
     price: string | null;
     status: string | null;
@@ -17,12 +18,14 @@ interface ProdutosParaInserirProps {
 }
 
 export interface Produto {
-    id: number | null;
+    id: number;
     name: string | null;
+    restaurant_id: number | null;
     category_id: number | null;
     description: string | null;
     price: string | null;
     status: string | null;
+    category: {id:number, name:string};
     image_path: string | null;
     created_at: Date;
     updated_at: Date;
@@ -30,10 +33,11 @@ export interface Produto {
 
 // Define a estrutura do retorno do serviço
 interface DataProduto {
-    data: Array<Produto>; // Agora sabemos que o array contém objetos do tipo Produto
+    data: Array<Produto>;
     message: string;
     error: boolean;
 }
+
 
 export async function buscaProdutos(): Promise<responseData | null> {
     try {
@@ -44,11 +48,40 @@ export async function buscaProdutos(): Promise<responseData | null> {
         return null;
     }
 }
-
-export async function adicionaProdutos({name,category_id,description,price,status,image_path}:ProdutosParaInserirProps): Promise<responseData | null> {
+export async function buscaProduto(product_id:number): Promise<responseData | null> {
     try {
         const response = await ApiService;
-        return response.post('/products',{ name,category_id,description,price,status,image_path });
+        return response.get('/products/'+product_id);
+    } catch (error) {
+        console.error('Erro ao buscar produto:', error);
+        return null;
+    }
+}
+
+export async function adicionaProdutos({name,category_id,description,price,status,image_path, restaurant_id}:ProdutosParaInserirProps): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.post('/products',{ name,category_id,description,price,status,image_path , restaurant_id});
+
+    } catch (error) {
+        console.error('Erro ao adicionar produto: ', error);
+        return null;
+    }
+}
+export async function atualizaProduto(product_id:number,{name,category_id,description,price,status,image_path}:ProdutosParaInserirProps): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.put('/products/'+product_id,{ name,category_id,description,price,status,image_path});
+
+    } catch (error) {
+        console.error('Erro ao adicionar produto: ', error);
+        return null;
+    }
+}
+export async function deletaProduto(product_id:number): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.delete('/products/'+product_id);
 
     } catch (error) {
         console.error('Erro ao adicionar produto: ', error);

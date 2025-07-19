@@ -1,51 +1,70 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { buscaProdutos, Produto } from "@/app/data/service/ProdutoService";
-import { Typography } from "@mui/material";
-import TableComponent from "../itens/TableComponent";
+import {  useState } from "react";
+import { Produto } from "@/app/data/service/ProdutoService";
+import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
 
-type ProdutoTabela = Pick<Produto, 'name' | 'description' | 'category_id'>;
-
-export default function Produtos() {
+interface ProdutoProps {
+    produtos: Array<Produto>
+    handleEditar: (id:number) => void
+    handleExcluir: (id:number) => void
+}
+export default function Produtos({produtos, handleEditar, handleExcluir}:ProdutoProps) {
     // Especificar o tipo de estado corretamente
-    const [produtos, setProdutos] = useState<Produto[]>([]); // Agora o estado é um array de Produto
     const [error, setError] = useState(false);
-
-    useEffect(() => {
-        // Função assíncrona para buscar Produtos
-        async function fetchProdutos() {
-            try {
-                const response = await buscaProdutos();
-                console.log(response?.data)
-                if (response?.data) {
-                    setProdutos(response.data.data); // Atualiza o estado com as Produtos
-                }
-            } catch (err) {
-                console.error("Erro ao buscar Produtos:", err);
-                setError(true);
-            }
-        }
-
-        fetchProdutos();
-    }, []); // O array vazio garante que a função execute apenas uma vez
 
     return (
         <>
-            {error ? (
-                <Typography component="p" color="error">
-                    Não foi possível carregar as Produtos.
-                </Typography>
-            ) : (
-                <TableComponent<ProdutoTabela>
-                    data={produtos}
-                    columns={[
-                        { label: "Nome", render: (item) => item.name },
-                        { label: "Descrição", render: (item) => item.description },
-                        { label: "Categoria", render: (item) => item.category_id }
-                    ]}
-                />
-            )}
+        {error ? (
+            <Typography component="p" color="error">
+                Não foi possível carregar as produtos.
+            </Typography>
+        ) : (
+            <TableContainer component={Paper} className="my-11">
+                <Table sx={{ minWidth: 650 }} size="small" aria-label="Tabela de produtos">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Actions</TableCell>
+                            <TableCell align="right">Produto</TableCell>
+                            <TableCell align="right">Descrição</TableCell>
+                            <TableCell align="right">Preço</TableCell>
+                            <TableCell align="right">Categoria</TableCell>
+                            <TableCell align="right">Status</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {produtos.length > 0 ? (produtos.map((produto) => (
+                        <TableRow
+                            hover
+                            key={produto.id}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell>
+                                <IconButton color="warning" onClick={() => handleEditar(produto.id)}>
+                                    <Edit/>
+                                </IconButton>
+                                <IconButton color="error" onClick={() => handleExcluir(produto.id)}>
+                                    <Delete/>
+                                </IconButton>
+                            </TableCell>
+                            <TableCell align="right">{produto.name}</TableCell>
+                            <TableCell align="right">{produto.description}</TableCell>
+                            <TableCell align="right">{produto.price}</TableCell>
+                            <TableCell align="right">{produto.category.name}</TableCell>
+                            <TableCell align="right">{produto.status}</TableCell>
+                        </TableRow>
+                    ))) : (
+                        <TableRow>
+                            <TableCell align="center">
+                                Não há produtos
+                            </TableCell>
+                        </TableRow>
+                    )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        )}
         </>
     );
 }
