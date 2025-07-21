@@ -1,17 +1,19 @@
 'use client';
 
-import {  useState } from "react";
-import { Produto } from "@/app/data/service/ProdutoService";
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { useState } from "react";
+import {ProdutosPaginados } from "@/app/data/service/ProdutoService";
+import { Box, CircularProgress, IconButton, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import {Delete, Edit } from "@mui/icons-material";
 
 interface ProdutoProps {
-    produtos: Array<Produto>
+    produtos: ProdutosPaginados | null
+    loading: boolean
     handleEditar: (id:number) => void
     handleExcluir: (id:number) => void
+    handlePageChange: (page:number) => void
 }
-export default function Produtos({produtos, handleEditar, handleExcluir}:ProdutoProps) {
-    // Especificar o tipo de estado corretamente
+export default function Produtos({produtos, loading, handleEditar, handleExcluir, handlePageChange}:ProdutoProps) {
+    
     const [error, setError] = useState(false);
 
     return (
@@ -34,7 +36,7 @@ export default function Produtos({produtos, handleEditar, handleExcluir}:Produto
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                    {produtos.length > 0 ? (produtos.map((produto) => (
+                    { produtos && produtos.data.length > 0 && !loading ? (produtos.data.map((produto) => (
                         <TableRow
                             hover
                             key={produto.id}
@@ -55,14 +57,42 @@ export default function Produtos({produtos, handleEditar, handleExcluir}:Produto
                             <TableCell align="right">{produto.status}</TableCell>
                         </TableRow>
                     ))) : (
-                        <TableRow>
-                            <TableCell align="center">
-                                Não há produtos
-                            </TableCell>
-                        </TableRow>
-                    )}
+                        loading ? (
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell align="center">
+                                        <CircularProgress/>
+                                    </TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+                        ) : (
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell align="center">
+                                        Não há produtos
+                                    </TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+                            )
+                    )} 
                     </TableBody>
                 </Table>
+                <Box className="flex justify-center py-10">
+                <Pagination
+                    count={produtos?.last_page} 
+                    page={produtos?.current_page} 
+                    onChange={(e,value) => {
+                        handlePageChange(value)
+                    }}
+                    color="primary"
+                />
+                </Box>
             </TableContainer>
         )}
         </>
