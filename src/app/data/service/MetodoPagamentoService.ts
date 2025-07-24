@@ -6,7 +6,13 @@ import { ApiService } from "./ApiService";
 interface responseData {
     data: DataMetodoPagamento;
 }
-
+interface responseDataDelete {
+    data: {
+        data: null,
+        error: boolean,
+        message:string
+    }
+}
 export interface MetodoPagamento {
     id: number;
     name: string;
@@ -26,7 +32,50 @@ export async function buscaMetodoPagamentos(): Promise<responseData | null> {
         const response = await ApiService;
         return response.get('/payments-methods');
     } catch (error) {
-        console.error('Erro ao buscar MetodoPagamentos:', error);
+        console.error('Erro ao buscar Metodo de Pagamentos:', error);
+        return null;
+    }
+}
+
+export async function adicionaMetodoPagamento(data:FormData): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        console.log(data)
+        return response.post('/payments-methods',data);
+
+    } catch (error) {
+        console.error('Erro ao adicionar método de pagamento: ', error);
+        return null;
+    }
+}
+
+export async function buscaMetodoPagamento(payment_method_id:number): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.get('/payments-methods/'+payment_method_id);
+    } catch (error) {
+        console.error('Erro ao buscar método de pagamento:', error);
+        return null;
+    }
+}
+
+export async function atualizaMetodoPagamento(payment_method_id:number,formData:FormData): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.put('/payments-methods/'+payment_method_id,formData);
+
+    } catch (error) {
+        console.error('Erro ao atualizar método de pagamento: ', error);
+        return null;
+    }
+}
+export async function deletaMetodoPagamento(payment_method_id:number): Promise<responseDataDelete | null> {
+    try {
+        const response = await ApiService;
+        return response.delete('/payments-methods/'+payment_method_id);
+
+    } catch (error) {
+        console.error('Erro ao deletar método de pagamento: ', error);
         return null;
     }
 }

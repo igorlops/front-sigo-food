@@ -6,7 +6,13 @@ import { ApiService } from "./ApiService";
 interface responseData {
     data: DataStatus;
 }
-
+interface responseDataDelete {
+    data: {
+        data: null,
+        error: boolean,
+        message:string
+    }
+}
 export interface Status {
     id: number;
     name: string;
@@ -42,6 +48,36 @@ export async function adicionaStatus(name: string): Promise<{ data: DataStatus} 
 
     } catch (error) {
         console.error('Erro ao adicionar status:', error);
+        return null;
+    }
+}
+export async function detailsStatus(status_id:number): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.get('/status/'+status_id);
+    } catch (error) {
+        console.error('Erro ao buscar status:', error);
+        return null;
+    }
+}
+
+export async function atualizaStatus(status_id:number,formData:FormData): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.put('/status/'+status_id,formData);
+
+    } catch (error) {
+        console.error('Erro ao atualizar status: ', error);
+        return null;
+    }
+}
+export async function deletaStatus(status_id:number): Promise<responseDataDelete | null> {
+    try {
+        const response = await ApiService;
+        return response.delete('/status/'+status_id);
+
+    } catch (error) {
+        console.error('Erro ao deletar status: ', error);
         return null;
     }
 }

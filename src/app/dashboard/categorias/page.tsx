@@ -20,7 +20,7 @@ export default function CategoriaPage() {
     try {
       const response = await buscaCategorias();
       if (response?.data) {
-        setCategorias(response.data.data);
+        setCategorias(response.data.data.data);
       }
     } catch (err) {
       console.error('Erro ao buscar categorias:', err);

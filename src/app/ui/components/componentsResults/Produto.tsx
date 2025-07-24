@@ -85,8 +85,8 @@ export default function Produtos({produtos, loading, handleEditar, handleExcluir
                 </Table>
                 <Box className="flex justify-center py-10">
                 <Pagination
-                    count={produtos?.last_page} 
-                    page={produtos?.current_page} 
+                    count={produtos?.last_page ?? 1} 
+                    page={produtos?.current_page ?? 1} 
                     onChange={(e,value) => {
                         handlePageChange(value)
                     }}

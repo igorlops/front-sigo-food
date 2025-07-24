@@ -3,10 +3,45 @@ import { ApiService } from "./ApiService";
 
 // Define a estrutura de uma categoria
 
+interface responseDataPagination {
+    data: DataProdutoPagination;
+}
+// Define a estrutura do retorno do serviço
+interface DataProdutoPagination {
+    data: ProdutosPaginados;
+    message: string;
+    error: boolean;
+}
+export interface ProdutosPaginados {
+    data: Array<Categoria>;
+    current_page: number;
+    first_page_url: string,
+    from: number,
+    last_page: number,
+    last_page_url: string,
+    links: Array<{
+        url: string | null,
+        label: string,
+        active: boolean
+    }>
+    next_page_url: string | null,
+    path: string,
+    per_page: number,
+    prev_page_url: string | null,
+    to: number,
+    total: number
+}
+
 interface responseData {
     data: DataCategoria;
 }
-
+interface responseDataDelete {
+    data: {
+        data: null,
+        error: boolean,
+        message:string
+    }
+}
 export interface Categoria {
     id: number;
     name: string;
@@ -22,12 +57,22 @@ interface DataCategoria {
     error: boolean;
 }
 
-export async function buscaCategorias(): Promise<responseData | null> {
+export async function buscaCategorias(): Promise<responseDataPagination | null> {
     try {
         const response = await ApiService;
         return response.get('/categories');
     } catch (error) {
         console.error('Erro ao buscar categorias:', error);
+        return null;
+    }
+}
+
+export async function buscaCategoria(category_id:number): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.get('/categories/'+category_id);
+    } catch (error) {
+        console.error('Erro ao buscar categoria:', error);
         return null;
     }
 }
@@ -43,6 +88,27 @@ export async function adicionaCategoria(name: string, restaurant_id: number): Pr
 
     } catch (error) {
         console.error('Erro ao adicionar categoria:', error);
+        return null;
+    }
+}
+
+export async function atualizaCategoria(category_id:number,formData:FormData): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.put('/categories/'+category_id,formData);
+
+    } catch (error) {
+        console.error('Erro ao atualizar categoria: ', error);
+        return null;
+    }
+}
+export async function deletaCategoria(category_id:number): Promise<responseDataDelete | null> {
+    try {
+        const response = await ApiService;
+        return response.delete('/categories/'+category_id);
+
+    } catch (error) {
+        console.error('Erro ao deletar categoria: ', error);
         return null;
     }
 }

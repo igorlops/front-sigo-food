@@ -74,15 +74,6 @@ export async function buscaProdutos( page:number ): Promise<responseDataPaginati
         return null;
     }
 }
-export async function buscaProduto(product_id:number): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.get('/products/'+product_id);
-    } catch (error) {
-        console.error('Erro ao buscar produto:', error);
-        return null;
-    }
-}
 
 export async function adicionaProdutos(data:FormData): Promise<responseData | null> {
     try {
@@ -95,13 +86,24 @@ export async function adicionaProdutos(data:FormData): Promise<responseData | nu
         return null;
     }
 }
+
+export async function buscaProduto(product_id:number): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.get('/products/'+product_id);
+    } catch (error) {
+        console.error('Erro ao buscar produto:', error);
+        return null;
+    }
+}
+
 export async function atualizaProduto(product_id:number,formData:FormData): Promise<responseData | null> {
     try {
         const response = await ApiService;
         return response.put('/products/'+product_id,formData);
 
     } catch (error) {
-        console.error('Erro ao adicionar produto: ', error);
+        console.error('Erro ao atualizar produto: ', error);
         return null;
     }
 }
@@ -111,7 +113,7 @@ export async function deletaProduto(product_id:number): Promise<responseDataDele
         return response.delete('/products/'+product_id);
 
     } catch (error) {
-        console.error('Erro ao adicionar produto: ', error);
+        console.error('Erro ao deletar produto: ', error);
         return null;
     }
 }
