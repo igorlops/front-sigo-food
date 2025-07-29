@@ -2,35 +2,67 @@
 
 import { useState } from "react";
 import { Typography,  Box, TextField, Button } from "@mui/material";
-import { adicionaCliente } from "@/app/data/service/ClienteService";
+import { adicionaCliente, atualizaCliente } from "@/app/data/service/ClienteService";
+import { UserLocalStorage } from "@/app/data/utils/const/User";
 
 // Definir a interface Categoria
 
 interface FormClientesProps {
   onSuccess: () => void
+  cliente_id: number | null
 }
 
-export default function FormClientes({onSuccess}:FormClientesProps) {
-    const [first_name, setFirstName] = useState("");
-    const [last_name, setLastName] = useState("");
-    const [cpf, setCpf] = useState("");
-    const [date_of_birth, setDateOfBirth] = useState("");
-    const [telefone, setTelefone] = useState("");
+export default function FormClientes({onSuccess,cliente_id}:FormClientesProps) {
+
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
+
+    const userLocalStorage = UserLocalStorage();
+    if (!userLocalStorage || userLocalStorage.restaurant_id === null) {
+        setError("Usuário não está logado ou restaurante não encontrado.");
+        return null; 
+    }
+    const restaurant_id = userLocalStorage.restaurant_id;
+
+    const handleEditaCliente = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setError('');
+      const formData = new FormData();
+      if (name) formData.append('name', name);
+      if (phone) formData.append('phone', phone);
+      if (email) formData.append('email', email);
+      if (restaurant_id) formData.append('restaurant_id', String(restaurant_id));
+
+      if(cliente_id) {
+          try {
+              const response = await atualizaCliente(cliente_id, formData);
+              if (!response?.data.error) {
+                setName("")
+                setEmail("")
+                setPhone("")
+              }
+          } catch (error) {
+              console.error(error);
+              setError('Erro ao adicionar a produto.');
+          }
+      }
+    };
 
     const handleCliente = async (e: React.FormEvent) => {
       e.preventDefault();
       setError(""); // Limpa mensagens de erro anteriores
-  
+      const formData = new FormData();
+      if (name) formData.append('name', name);
+      if (phone) formData.append('phone', phone);
+      if (email) formData.append('email', email);
+      if (restaurant_id) formData.append('restaurant_id', String(restaurant_id));
       try {
-          const response = await adicionaCliente(first_name,last_name,cpf,date_of_birth,telefone,email);
+          const response = await adicionaCliente(formData);
           if(!response?.data.error) {
-            setFirstName("")
-            setLastName("")
-            setCpf("")
-            setDateOfBirth("")
-            setTelefone("") 
+            setName("")
+            setPhone("") 
             setEmail("")
             onSuccess();
           }
@@ -49,7 +81,7 @@ export default function FormClientes({onSuccess}:FormClientesProps) {
             flexDirection: 'column',
             gap: 2,
           }}
-          onSubmit={handleCliente}
+          onSubmit={cliente_id ? handleEditaCliente : handleCliente}
           noValidate
           autoComplete="off"
         >
@@ -57,7 +89,7 @@ export default function FormClientes({onSuccess}:FormClientesProps) {
             variant="h5"
             className="text-gray-800 font-bold text-center mb-4"
           >
-            Adicionar categoria
+            {cliente_id ? 'Editar Cliente' : 'Adicionar cliente'}
           </Typography>
   
           {error && (
@@ -67,56 +99,23 @@ export default function FormClientes({onSuccess}:FormClientesProps) {
           )}
   
           <TextField
-            id="first_name"
-            label="Primeiro nome"
+            id="name"
+            label="Nome completo"
             variant="outlined"
             fullWidth
             type="text"
-            value={first_name}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
           <TextField
-            id="last_name"
-            label="Segundo nome"
+            id="phone"
+            label="phone"
             variant="outlined"
             fullWidth
             type="text"
-            value={last_name}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
-          <TextField
-            id="cpf"
-            label="CPF"
-            variant="outlined"
-            fullWidth
-            type="text"
-            value={cpf}
-            onChange={(e) => setCpf(e.target.value)}
-            required
-          />
-          <TextField
-            id="date_of_birth"
-            label="Data de nascimento"
-            variant="outlined"
-            fullWidth
-            type="date"
-            value={date_of_birth}
-            onChange={(e) => setDateOfBirth(e.target.value)}
-            InputLabelProps={{
-              shrink: true, // Garante que o label não sobreponha o campo
-            }}
-            required
-          />
-          <TextField
-            id="telefone"
-            label="Telefone"
-            variant="outlined"
-            fullWidth
-            type="text"
-            value={telefone}
-            onChange={(e) => setTelefone(e.target.value)}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             required
           />
           <TextField
@@ -135,7 +134,7 @@ export default function FormClientes({onSuccess}:FormClientesProps) {
             color="primary"
             className="mt-4"
           >
-            Adicionar
+            {cliente_id ? 'Editar Cliente' : 'Adicionar Cliente'}
           </Button>
         </Box>
     );

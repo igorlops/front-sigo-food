@@ -17,12 +17,13 @@ export default function ProdutosPage() {
   const [deletar_produto_id, setDeletarProdutoId] = useState<number | null>(null)
   const [message_deletado, setMensagemDeletado] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const handleClose=()=> {
-    setModalVisible(false)
-  }
-    const [produtos, setProdutos] = useState<ProdutosPaginados | null>(null);
-    const [error, setError] = useState(false);
-
+  const [produtos, setProdutos] = useState<ProdutosPaginados | null>(null);
+  const [error, setError] = useState(false);
+  
+    const handleClose=()=> {
+      setModalVisible(false)
+    }
+  
     const handleEditar = (product_id:number) => {
       if(confirm("Você deseja editar o produto?")) {
         setProdutoId(product_id)

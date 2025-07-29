@@ -36,7 +36,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
         try {
             const response = await buscaCategorias();
             if (response?.data) {
-                setCategorias(response.data.data.data);
+                setCategorias(response.data.data);
             }
         } catch (err) {
             console.error('Erro ao buscar categorias:', err);
@@ -215,7 +215,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
                                     setCategoryId(value === '' ? null : Number(value));
                                 }}
                             >
-                            {categorias.map((categoria) => (
+                            {categorias?.map((categoria) => (
                                 <MenuItem key={categoria.id} value={categoria.id}>
                                     {categoria.name}
                                 </MenuItem>

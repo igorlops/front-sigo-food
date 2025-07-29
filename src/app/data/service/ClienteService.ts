@@ -2,15 +2,15 @@
 import { ApiService } from "./ApiService";
 
 interface responseDataPagination {
-    data: DataProdutoPagination;
+    data: DataClientePagination;
 }
 // Define a estrutura do retorno do serviço
-interface DataProdutoPagination {
-    data: ProdutosPaginados;
+interface DataClientePagination {
+    data: ClientesPaginados;
     message: string;
     error: boolean;
 }
-export interface ProdutosPaginados {
+export interface ClientesPaginados {
     data: Array<Cliente>;
     current_page: number;
     first_page_url: string,
@@ -66,10 +66,10 @@ export async function buscaClientes(): Promise<responseDataPagination | null> {
     }
 }
 
-export async function adicionaCliente(first_name: string,last_name: string,cpf: string,date_of_birth: string,telefone: string,email: string): Promise<{ data: DataCliente} | null> {
+export async function adicionaCliente(formData:FormData): Promise<{ data: DataCliente} | null> {
     try {
         const response = await ApiService;
-        return response.post('/clients',JSON.stringify({ first_name,last_name,cpf,date_of_birth,telefone,email }));
+        return response.post('/clients',formData);
 
     } catch (error) {
         console.error('Erro ao adicionar cliente:', error);

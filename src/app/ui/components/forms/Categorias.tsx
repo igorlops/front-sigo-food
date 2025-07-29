@@ -1,23 +1,26 @@
 'use client';
 
-import { useState } from 'react';
-import { adicionaCategoria } from '@/app/data/service/CategoriaService';
+import { useEffect, useState } from 'react';
+import { adicionaCategoria, buscaCategoria } from '@/app/data/service/CategoriaService';
 import { Typography, Box, TextField, Button } from '@mui/material';
 import { UserLocalStorage} from '@/app/data/utils/const/User';
 
 interface FormCategoriasProps {
   onSuccess: () => void;
+  categoria_id: number | null
 }
 
-export default function FormCategorias({ onSuccess }: FormCategoriasProps) {
+export default function FormCategorias({ onSuccess, categoria_id }: FormCategoriasProps) {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
+
   const userLocalStorage = UserLocalStorage();
   if (!userLocalStorage || userLocalStorage.restaurant_id === null) {
     setError("Usuário não está logado ou restaurante não encontrado.");
     return;
   }
   const restaurant_id = userLocalStorage.restaurant_id;
+
   const handleCategoria = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -34,6 +37,27 @@ export default function FormCategorias({ onSuccess }: FormCategoriasProps) {
       setError('Erro ao adicionar a categoria.');
     }
   };
+
+  const fetchCategoriaId = async (categoria_id:number) => {
+    try {
+        const response = await buscaCategoria(categoria_id);
+        if (response?.data.data && response.data.data.length > 0) {
+            const categoria = response.data.data[0];
+            if(categoria != null) {
+                setName(categoria.name)
+            }
+        }
+    } catch (err) {
+        console.error('Erro ao buscar categoria:', err);
+        setError('Erro ao buscar categoria');
+    }
+  };
+
+  useEffect(() => {
+      if(categoria_id != null) {
+          fetchCategoriaId(categoria_id);
+      }
+  },[categoria_id])
 
   return (
     <Box

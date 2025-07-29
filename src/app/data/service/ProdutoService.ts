@@ -65,7 +65,7 @@ export interface Produto {
 
 
 
-export async function buscaProdutos( page:number ): Promise<responseDataPagination | null> {
+export async function buscaProdutos( page:number=1 ): Promise<responseDataPagination | null> {
     try {
         const response = await ApiService;
         return response.get('/products?page='+page);

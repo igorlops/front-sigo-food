@@ -8,11 +8,11 @@ interface responseDataPagination {
 }
 // Define a estrutura do retorno do serviço
 interface DataProdutoPagination {
-    data: ProdutosPaginados;
+    data: CategoriasPaginadas;
     message: string;
     error: boolean;
 }
-export interface ProdutosPaginados {
+export interface CategoriasPaginadas {
     data: Array<Categoria>;
     current_page: number;
     first_page_url: string,
@@ -57,10 +57,19 @@ interface DataCategoria {
     error: boolean;
 }
 
-export async function buscaCategorias(): Promise<responseDataPagination | null> {
+export async function buscaCategorias(): Promise<responseData | null> {
     try {
         const response = await ApiService;
         return response.get('/categories');
+    } catch (error) {
+        console.error('Erro ao buscar categorias:', error);
+        return null;
+    }
+}
+export async function buscaCategoriasPaginadas(page:number=1): Promise<responseDataPagination | null> {
+    try {
+        const response = await ApiService;
+        return response.get('/categories?paginated=S&page='+page);
     } catch (error) {
         console.error('Erro ao buscar categorias:', error);
         return null;

@@ -1,16 +1,19 @@
 'use client';
 
-import { Categoria } from '@/app/data/service/CategoriaService';
+import { Categoria, CategoriasPaginadas } from '@/app/data/service/CategoriaService';
 import { Delete, Edit } from '@mui/icons-material';
 import { Typography, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Pagination, Box, CircularProgress, IconButton } from '@mui/material';
 import { useState } from 'react';
 
 interface CategoriasProps {
-  categorias: Categoria[];
-  error: boolean;
+    categorias: CategoriasPaginadas | null;
+    loading: boolean;
+    handleEditar: (id:number) => void
+    handleExcluir: (id:number) => void
+    handlePageChange: (page:number) => void
 }
 
-export default function Categorias({ categorias}: CategoriasProps) {
+export default function Categorias({ categorias,loading, handleEditar, handleExcluir, handlePageChange}: CategoriasProps) {
       const [error, setError] = useState(false);
 
     return (
@@ -25,15 +28,11 @@ export default function Categorias({ categorias}: CategoriasProps) {
                     <TableHead>
                         <TableRow>
                             <TableCell>Actions</TableCell>
-                            <TableCell align="right">Produto</TableCell>
-                            <TableCell align="right">Descrição</TableCell>
-                            <TableCell align="right">Preço</TableCell>
-                            <TableCell align="right">Categoria</TableCell>
-                            <TableCell align="right">Status</TableCell>
+                            <TableCell align="right">Name</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                    { categorias && categorias.length > 0 && !loading ? (categorias.map((categoria) => (
+                    { categorias && categorias?.data?.length > 0 && !loading ? (categorias.data.map((categoria) => (
                         <TableRow
                             hover
                             key={categoria.id}
@@ -52,24 +51,16 @@ export default function Categorias({ categorias}: CategoriasProps) {
                     ))) : (
                         loading ? (
                                 <TableRow>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
                                     <TableCell align="center">
                                         <CircularProgress/>
                                     </TableCell>
                                     <TableCell></TableCell>
-                                    <TableCell></TableCell>
                                 </TableRow>
                         ) : (
                                 <TableRow>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
                                     <TableCell align="center">
                                         Não há categorias
                                     </TableCell>
-                                    <TableCell></TableCell>
                                     <TableCell></TableCell>
                                 </TableRow>
                             )
