@@ -6,11 +6,11 @@ interface responseDataPagination {
 }
 // Define a estrutura do retorno do serviço
 interface DataProdutoPagination {
-    data: ProdutosPaginados;
+    data: PedidosPaginados;
     message: string;
     error: boolean;
 }
-export interface ProdutosPaginados {
+export interface PedidosPaginados {
     data: Array<Pedido>;
     current_page: number;
     first_page_url: string,
@@ -43,12 +43,19 @@ export interface Pedido {
     id: number;
     restaurant_id: number;
     client_id: number;
+    client_name: number;
     payment_method_id: number;
+    payment_method_desc: number;
     status: number;
     order_type: number;
     delivery_fee: number;
     total_value: number;
     delivery_address: number;
+    product: {
+        id: string;
+        name:string;
+        price: string;
+    }
     created_at: Date;
     updated_at: Date;
 }
@@ -60,10 +67,10 @@ interface DataPedido {
     error: boolean;
 }
 
-export async function buscaPedidos(): Promise<responseDataPagination | null> {
+export async function buscaPedidos(current_page:number): Promise<responseDataPagination | null> {
     try {
         const response = await ApiService;
-        return response.get('/orders');
+        return response.get('/orders?page='+current_page);
     } catch (error) {
         console.error('Erro ao buscar pedidos:', error);
         return null;

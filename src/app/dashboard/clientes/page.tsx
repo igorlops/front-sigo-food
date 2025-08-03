@@ -1,8 +1,9 @@
 'use client';
 
 import { buscaClientes, Cliente, ClientesPaginados, deletaCliente } from '@/app/data/service/ClienteService';
-import Clientes from '@/app/ui/components/componentsResults/Clientes';
-import FormClientes from '@/app/ui/components/forms/Clientes';
+import Clientes from '@/app/ui/components/Modules/Cliente/Table/Clientes';
+import FormClientes from '@/app/ui/components/Modules/Cliente/Form/Clientes';
+import { Breadcrumb } from '@/app/ui/components/itens/Breadcrumb';
 import ButtonCreateNew from '@/app/ui/components/itens/ButtonCreateNew';
 import ModalComponent from '@/app/ui/components/itens/ModalComponent';
 import { Close } from '@mui/icons-material';
@@ -41,12 +42,14 @@ export default function ClientesPage() {
       setCurrentPage(page)
     }
   const fetchClientes = async () => {
+      setLoading(true)
       try {
           const response = await buscaClientes();
           console.log(response?.data)
           if (response?.data) {
               setClientes(response.data.data);
           }
+        setLoading(false)
       } catch (err) {
           console.error("Erro ao buscar clientes:", err);
           setError(true);
@@ -86,6 +89,7 @@ export default function ClientesPage() {
       <Typography variant='h2'>
         Clientes
       </Typography>
+          <Breadcrumb data_breadcrumb={[{label:'Clientes', link:'clientes'}]}/>
       <Collapse in={openAlert}>
         <Alert
           action={

@@ -9,7 +9,7 @@ import {
   TableRow
 } from "@mui/material";
 
-type Column<T> = {
+export type Column<T> = {
   label: string;
   render: (row: T) => React.ReactNode;
 };

@@ -18,7 +18,7 @@ export default function EstoquesPage() {
     const [deletar_estoque_id, setDeletarEstoqueId] = useState<number | null>(null)
     const [message_deletado, setMensagemDeletado] = useState<string | null>(null)
     const [currentPage, setCurrentPage] = useState<number>(1)
-    const [estoques, setEstoques] = useState<ShowEstoque[] | null>(null); // Agora o estado é um array de Estoque
+    const [estoques, setEstoques] = useState<ShowEstoque[] | null | undefined>(); // Agora o estado é um array de Estoque
     const [error, setError] = useState(false);
 
     const handleClose=()=> {
@@ -36,10 +36,9 @@ export default function EstoquesPage() {
       setLoading(true)
       try {
         const response = await buscaEstoques();
-        console.log(response?.data.data)
+        console.log(response?.data)
         if (response?.data) {
-          setEstoques(response.data.data);
-
+          setEstoques(response.data); // Atualiza o estado com as Estoques
         }
         setLoading(false)
       } catch (err) {
@@ -53,11 +52,11 @@ export default function EstoquesPage() {
     }, []); // O array vazio garante que a função execute apenas uma vez
   
   return (
-    <div>
+<div>
       <Typography variant='h2'>
         Estoques
       </Typography>
-      <Breadcrumb data_breadcrumb={[{label:'Estoques', link:'estoques'}]}/>
+      <Breadcrumb key='estoques' data_breadcrumb={[{label:'Estoques', link:'estoques'},{label:'Produto', link:'produto'}]}/>
       <Collapse in={openAlert}>
         <Alert
           action={
@@ -79,7 +78,7 @@ export default function EstoquesPage() {
       </Collapse>
       <p className='text-red-500 text-sm'>{error}</p>
       <div>
-          <ButtonCreateNew description="Criar Novo Estoque" handleViewForm={() => {setModalVisible(!modalVisible); setEstoqueId(null)}}/>
+          <ButtonCreateNew description="Criar Novo produto" handleViewForm={() => {setModalVisible(!modalVisible); setEstoqueId(null)}}/>
       </div>
       <Estoques estoques={estoques} loading={loading} handleShow={handleShow}/>
       <ModalComponent
@@ -87,7 +86,6 @@ export default function EstoquesPage() {
         open={modalVisible}
         handleClose={handleClose}
       />
-      
     </div>
   );
 }

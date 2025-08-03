@@ -1,13 +1,14 @@
 'use client';
 
 import { buscaProdutos, deletaProduto, ProdutosPaginados } from '@/app/data/service/ProdutoService';
-import Produtos from '@/app/ui/components/componentsResults/Produto';
-import ProdutosForm from '@/app/ui/components/forms/Produto';
+import Produtos from '@/app/ui/components/Modules/Produto/Table/Produto';
+import ProdutosForm from '@/app/ui/components/Modules/Produto/Form/Produto';
 import ButtonCreateNew from '@/app/ui/components/itens/ButtonCreateNew';
 import ModalComponent from '@/app/ui/components/itens/ModalComponent';
 import { Close } from '@mui/icons-material';
 import { Alert, Collapse, IconButton, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { Breadcrumb } from '@/app/ui/components/itens/Breadcrumb';
 
 export default function ProdutosPage() {
   const [modalVisible, setModalVisible] = useState<boolean>(false)
@@ -89,6 +90,7 @@ export default function ProdutosPage() {
       <Typography variant='h2'>
         Produtos
       </Typography>
+      <Breadcrumb data_breadcrumb={[{label:'Produtos', link:'produtos'}]}/>
       <Collapse in={openAlert}>
         <Alert
           action={

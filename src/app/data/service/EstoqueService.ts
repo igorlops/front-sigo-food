@@ -2,15 +2,15 @@
 import { ApiService } from "./ApiService";
 
 interface responseDataPagination {
-    data: DataProdutoPagination;
+    data: DataEstoquePagination;
 }
 // Define a estrutura do retorno do serviço
-interface DataProdutoPagination {
-    data: ProdutosPaginados;
+interface DataEstoquePagination {
+    data: EstoquesPaginados;
     message: string;
     error: boolean;
 }
-export interface ProdutosPaginados {
+export interface EstoquesPaginados {
     data: Array<Estoque>;
     current_page: number;
     first_page_url: string,
@@ -54,8 +54,21 @@ interface DataEstoque {
     message: string;
     error: boolean;
 }
+export interface dataResponseShowEstoque {
+    data:{
+        data: Array<ShowEstoque>
+    };
+    error: boolean;
+    message:string;
+}
+export interface ShowEstoque {
+    product_id:number;
+    product_name: string;
+    quantity: number;
+}
 
-export async function buscaEstoques(): Promise<responseDataPagination | null> {
+
+export async function buscaEstoques(): Promise<dataResponseShowEstoque | null> {
     try {
         const response = await ApiService;
         return response.get('/stocks');
@@ -79,7 +92,16 @@ export async function adicionaEstoque(id_product: number | null,quantity: number
 export async function buscaEstoque(stock_id:number): Promise<responseData | null> {
     try {
         const response = await ApiService;
-        return response.get('/products/'+stock_id);
+        return response.get('/stocks/'+stock_id);
+    } catch (error) {
+        console.error('Erro ao buscar estoque:', error);
+        return null;
+    }
+}
+export async function buscaEstoquePorProduto(product_id:number): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.get('/stocks/product/'+product_id);
     } catch (error) {
         console.error('Erro ao buscar estoque:', error);
         return null;
@@ -89,7 +111,7 @@ export async function buscaEstoque(stock_id:number): Promise<responseData | null
 export async function atualizaEstoque(stock_id:number,formData:FormData): Promise<responseData | null> {
     try {
         const response = await ApiService;
-        return response.put('/products/'+stock_id,formData);
+        return response.put('/stocks/'+stock_id,formData);
 
     } catch (error) {
         console.error('Erro ao atualizar estoque: ', error);
@@ -99,7 +121,7 @@ export async function atualizaEstoque(stock_id:number,formData:FormData): Promis
 export async function deletaEstoque(stock_id:number): Promise<responseDataDelete | null> {
     try {
         const response = await ApiService;
-        return response.delete('/products/'+stock_id);
+        return response.delete('/stocks/'+stock_id);
 
     } catch (error) {
         console.error('Erro ao deletar estoque: ', error);

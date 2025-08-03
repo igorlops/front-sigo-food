@@ -1,13 +1,14 @@
 'use client';
 
-import Categorias from '@/app/ui/components/componentsResults/Categorias';
-import FormCategorias from '@/app/ui/components/forms/Categorias';
+import Categorias from '@/app/ui/components/Modules/Categoria/Table/Categorias';
+import FormCategorias from '@/app/ui/components/Modules/Categoria/Form/Categorias';
 import { buscaCategorias, buscaCategoriasPaginadas, CategoriasPaginadas, deletaCategoria } from '@/app/data/service/CategoriaService';
 import { useEffect, useState } from 'react';
 import { Alert, Collapse, IconButton, Typography } from '@mui/material';
 import ButtonCreateNew from '@/app/ui/components/itens/ButtonCreateNew';
 import ModalComponent from '@/app/ui/components/itens/ModalComponent';
 import { Close } from '@mui/icons-material';
+import { Breadcrumb } from '@/app/ui/components/itens/Breadcrumb';
 
 export default function CategoriaPage() {
   const [categorias, setCategorias] = useState<CategoriasPaginadas | null>(null);
@@ -84,9 +85,10 @@ export default function CategoriaPage() {
 
   return (
     <div>
-      <Typography component="h1" variant="h4">
+      <Typography component="h1" variant="h4" className='text-center'>
         Categorias
       </Typography>
+      <Breadcrumb data_breadcrumb={[{label:'Categoria', link:'categorias'}]}/>
       <Collapse in={openAlert}>
         <Alert
           action={
