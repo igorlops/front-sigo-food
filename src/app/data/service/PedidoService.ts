@@ -45,7 +45,7 @@ export interface Pedido {
     client_id: number;
     client_name: number;
     payment_method_id: number;
-    payment_method_desc: number;
+    payment_method_desc: string;
     status: number;
     order_type: number;
     delivery_fee: number;
