@@ -49,7 +49,7 @@ export default function Produtos({ produtos, loading, handleEditar, handleExclui
         },
         {
             label: 'Status',
-            render: (row) => row.status,
+            render: (row) => row.status.description,
         },
     ];
 

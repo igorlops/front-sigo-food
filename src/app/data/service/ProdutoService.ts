@@ -54,11 +54,13 @@ export interface Produto {
     name: string | null;
     restaurant_id: number | null;
     category_id: number | null;
+    status_id: number | null;
     description: string | null;
     price: string | null;
-    status: string | null;
+    image_path: string;
+    status: {id:number, description:string};
     category: {id:number, name:string};
-    image_path: string | null;
+    imageProduct: Array<{id:number, product_id:number,image_path:string}>;
     created_at: Date;
     updated_at: Date;
 }

@@ -19,7 +19,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
     const [category_id, setCategoryId] = useState<number | null>(null);
     const [description, setDescription] = useState<string | null>('');
     const [price, setPrice] = useState<string| null>('');
-    const [status, setStatus] = useState<string | null>(''); // O status inicial é 'Ativo'
+    const [status, setStatus] = useState<number | null>(null); // O status inicial é 'Ativo'
     const [image_path, setImagePath] = useState<File | null>(null);
     const [image_preview, setImagePreview] = useState<string | null>(null);
     const [error, setError] = useState('');
@@ -52,7 +52,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
                     setCategoryId(produto.category_id)
                     setDescription(produto.description)
                     setPrice(produto.price)
-                    setStatus(produto.status)
+                    setStatus(produto.status.id)
                     setName(produto.name)
                 }
             }
@@ -95,7 +95,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
         if (category_id) formData.append('category_id', String(category_id));
         if (description) formData.append('description', description);
         if (price) formData.append('price', price);
-        if (status) formData.append('status', status);
+        if (status) formData.append('status', String(status));
         if (restaurant_id) formData.append('restaurant_id', String(restaurant_id));
 
         if (image_path) {
@@ -108,7 +108,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
                 setName('');
                 setDescription('');
                 setPrice('');
-                setStatus('');
+                setStatus(null);
                 setCategoryId(null);
                 onSuccess();
             }
@@ -125,7 +125,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
         if (category_id) formData.append('category_id', String(category_id));
         if (description) formData.append('description', description);
         if (price) formData.append('price', price);
-        if (status) formData.append('status', status);
+        if (status) formData.append('status', String(status));
         if (restaurant_id) formData.append('restaurant_id', String(restaurant_id));
 
         if (image_path) {
@@ -138,7 +138,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
                     setName('');
                     setDescription('');
                     setPrice('');
-                    setStatus('');
+                    setStatus(null);
                     setCategoryId(null);
                     onSuccess();
                 }
@@ -150,7 +150,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
     };
 
     const handleSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setStatus(event.target.checked ? 'Ativo' : 'Inativo');
+        setStatus(event.target.checked ? 1 : 2);
     };
 
     const VisuallyHiddenInput = styled('input')({
@@ -245,7 +245,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
                     <FormControlLabel
                         control={
                             // Remova defaultChecked e confie apenas em 'checked'
-                            <Switch checked={status === 'Ativo'} onChange={handleSwitch} name="status" />
+                            <Switch checked={status === 1} onChange={handleSwitch} name="status" />
                         }
                         label="Produto está ativo?"
                     />
