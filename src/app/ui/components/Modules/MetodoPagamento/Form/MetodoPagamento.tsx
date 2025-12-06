@@ -1,50 +1,88 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { buscaMetodoPagamentos, MetodoPagamento } from "@/app/data/service/MetodoPagamentoService";
-import { Typography, List, ListItem, ListItemText } from "@mui/material";
+import { Typography, Box, TextField, Button } from "@mui/material";
+import { adicionaMetodoPagamento, atualizaMetodoPagamento, buscaMetodoPagamento } from "@/app/data/service/MetodoPagamentoService";
 
-export default function MetodoPagamentos() {
-    // Especificar o tipo de estado corretamente
-    const [metodoPagamentos, setMetodoPagamentos] = useState<MetodoPagamento[]>([]); // Agora o estado é um array de MetodoPagamento
-    const [error, setError] = useState(false);
+interface FormMetodoPagamentoProps {
+    onSuccess: () => void;
+    metodo_id: number | null;
+}
+
+export default function FormMetodoPagamento({ onSuccess, metodo_id }: FormMetodoPagamentoProps) {
+    const [name, setName] = useState("");
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        // Função assíncrona para buscar MetodoPagamentos
-        async function fetchMetodoPagamentos() {
-            try {
-                const response = await buscaMetodoPagamentos();
-                console.log(response?.data)
-                if (response?.data) {
-                    setMetodoPagamentos(response.data.data); // Atualiza o estado com as MetodoPagamentos
-                }
-            } catch (err) {
-                console.error("Erro ao buscar MetodoPagamentos:", err);
-                setError(true);
-            }
+        if (metodo_id) {
+            fetchMetodoPagamento(metodo_id);
         }
+    }, [metodo_id]);
 
-        fetchMetodoPagamentos();
-    }, []); // O array vazio garante que a função execute apenas uma vez
+    const fetchMetodoPagamento = async (id: number) => {
+        try {
+            const response = await buscaMetodoPagamento(id);
+            if (response?.data.data && response.data.data.length > 0) {
+                const metodo = response.data.data[0];
+                setName(metodo.name);
+            }
+        } catch (err) {
+            console.error('Erro ao buscar método de pagamento:', err);
+            setError('Erro ao buscar método de pagamento');
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError("");
+
+        const formData = new FormData();
+        formData.append('name', name);
+
+        try {
+            const response = metodo_id
+                ? await atualizaMetodoPagamento(metodo_id, formData)
+                : await adicionaMetodoPagamento(formData);
+
+            if (!response?.data.error) {
+                setName("");
+                onSuccess();
+            }
+        } catch (error) {
+            console.error(error);
+            setError('Erro ao salvar método de pagamento.');
+        }
+    };
 
     return (
-        <>
-            <Typography component="h2" variant="h5">
-                Componentes de MetodoPagamentos
+        <Box
+            component="form"
+            onSubmit={handleSubmit}
+            className="px-10 py-10 rounded-xl flex flex-col gap-6 items-center min-w-[400px] bg-gray-100"
+        >
+            <Typography variant="h5" className="text-blue-900 font-bold">
+                {metodo_id ? 'Editar Método de Pagamento' : 'Adicionar Método de Pagamento'}
             </Typography>
-            {error ? (
-                <Typography component="p" color="error">
-                    Não foi possível carregar as MetodoPagamentos.
+
+            {error && (
+                <Typography variant="body2" color="error">
+                    {error}
                 </Typography>
-            ) : (
-                <List>
-                    {metodoPagamentos.map((metodoPagamento) => (
-                        <ListItem key={metodoPagamento.id}>
-                            <ListItemText primary={metodoPagamento.name} />
-                        </ListItem>
-                    ))}
-                </List>
             )}
-        </>
+
+            <TextField
+                className="w-full"
+                label="Nome do Método"
+                variant="outlined"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                helperText="Ex: Dinheiro, Cartão de Crédito, PIX"
+            />
+
+            <Button type="submit" variant="contained" color="primary" className="w-full">
+                {metodo_id ? 'Atualizar' : 'Adicionar'}
+            </Button>
+        </Box>
     );
 }

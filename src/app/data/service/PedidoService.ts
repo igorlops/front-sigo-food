@@ -2,10 +2,10 @@
 import { ApiService } from "./ApiService";
 
 interface responseDataPagination {
-    data: DataProdutoPagination;
+    data: DataPedidoPagination;
 }
 // Define a estrutura do retorno do serviço
-interface DataProdutoPagination {
+interface DataPedidoPagination {
     data: PedidosPaginados;
     message: string;
     error: boolean;
@@ -36,7 +36,7 @@ interface responseDataDelete {
     data: {
         data: null,
         error: boolean,
-        message:string
+        message: string
     }
 }
 export interface Pedido {
@@ -53,7 +53,7 @@ export interface Pedido {
     delivery_address: number;
     product: {
         id: string;
-        name:string;
+        name: string;
         price: string;
     }
     created_at: Date;
@@ -67,21 +67,21 @@ interface DataPedido {
     error: boolean;
 }
 
-export async function buscaPedidos(current_page:number): Promise<responseDataPagination | null> {
+export async function buscaPedidos(current_page: number): Promise<responseDataPagination | null> {
     try {
         const response = await ApiService;
-        return response.get('/orders?page='+current_page);
+        return response.get('/orders?page=' + current_page);
     } catch (error) {
         console.error('Erro ao buscar pedidos:', error);
         return null;
     }
 }
 
-export async function adicionaPedido(data:FormData): Promise<responseData | null> {
+export async function adicionaPedido(data: FormData): Promise<responseData | null> {
     try {
         const response = await ApiService;
         console.log(data)
-        return response.post('/orders',data);
+        return response.post('/orders', data);
 
     } catch (error) {
         console.error('Erro ao adicionar pedido: ', error);
@@ -89,30 +89,30 @@ export async function adicionaPedido(data:FormData): Promise<responseData | null
     }
 }
 
-export async function buscaPedido(order_id:number): Promise<responseData | null> {
+export async function buscaPedido(order_id: number): Promise<responseData | null> {
     try {
         const response = await ApiService;
-        return response.get('/orders/'+order_id);
+        return response.get('/orders/' + order_id);
     } catch (error) {
         console.error('Erro ao buscar pedido:', error);
         return null;
     }
 }
 
-export async function atualizaPedido(order_id:number,formData:FormData): Promise<responseData | null> {
+export async function atualizaPedido(order_id: number, formData: FormData): Promise<responseData | null> {
     try {
         const response = await ApiService;
-        return response.put('/orders/'+order_id,formData);
+        return response.put('/orders/' + order_id, formData);
 
     } catch (error) {
         console.error('Erro ao atualizar pedido: ', error);
         return null;
     }
 }
-export async function deletaPedido(order_id:number): Promise<responseDataDelete | null> {
+export async function deletaPedido(order_id: number): Promise<responseDataDelete | null> {
     try {
         const response = await ApiService;
-        return response.delete('/orders/'+order_id);
+        return response.delete('/orders/' + order_id);
 
     } catch (error) {
         console.error('Erro ao deletar pedido: ', error);

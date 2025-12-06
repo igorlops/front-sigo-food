@@ -1,0 +1,1034 @@
+{
+    "_type": "export",
+    "__export_format": 4,
+    "__export_date": "2025-12-05T22:42:00.000Z",
+    "__export_source": "insomnia.desktop.app:v2023.5.8",
+    "resources": [
+        {
+            "_id": "wrk_sigofood",
+            "_type": "workspace",
+            "name": "API SigoFood",
+            "description": "API completa do sistema SigoFood",
+            "scope": "collection"
+        },
+        {
+            "_id": "env_base",
+            "_type": "environment",
+            "name": "Base Environment",
+            "data": {
+                "base_url": "http://localhost:8000/api",
+                "token": ""
+            },
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "folder_auth",
+            "_type": "request_group",
+            "name": "🔐 Authentication",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_login",
+            "_type": "request",
+            "name": "Login",
+            "method": "POST",
+            "url": "{{ _.base_url }}/login",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_auth"
+        },
+        {
+            "_id": "req_logout",
+            "_type": "request",
+            "name": "Logout",
+            "method": "POST",
+            "url": "{{ _.base_url }}/logout",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_auth"
+        },
+        {
+            "_id": "req_forgot_password",
+            "_type": "request",
+            "name": "Forgot Password",
+            "method": "POST",
+            "url": "{{ _.base_url }}/forgot-password",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"user@example.com\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_auth"
+        },
+        {
+            "_id": "req_reset_password",
+            "_type": "request",
+            "name": "Reset Password",
+            "method": "POST",
+            "url": "{{ _.base_url }}/reset-password/{token}",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_auth"
+        },
+        {
+            "_id": "folder_users",
+            "_type": "request_group",
+            "name": "👥 Users",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_users_index",
+            "_type": "request",
+            "name": "List Users",
+            "method": "GET",
+            "url": "{{ _.base_url }}/users",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_users"
+        },
+        {
+            "_id": "req_users_store",
+            "_type": "request",
+            "name": "Create User",
+            "method": "POST",
+            "url": "{{ _.base_url }}/users",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_users"
+        },
+        {
+            "_id": "req_users_show",
+            "_type": "request",
+            "name": "Show User",
+            "method": "GET",
+            "url": "{{ _.base_url }}/users/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_users"
+        },
+        {
+            "_id": "req_users_update",
+            "_type": "request",
+            "name": "Update User",
+            "method": "PUT",
+            "url": "{{ _.base_url }}/users/1",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"John Doe Updated\",\n  \"email\": \"john.updated@example.com\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_users"
+        },
+        {
+            "_id": "req_users_destroy",
+            "_type": "request",
+            "name": "Delete User",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/users/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_users"
+        },
+        {
+            "_id": "folder_products",
+            "_type": "request_group",
+            "name": "🍔 Products",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_products_index",
+            "_type": "request",
+            "name": "List Products",
+            "method": "GET",
+            "url": "{{ _.base_url }}/products",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_products"
+        },
+        {
+            "_id": "req_products_store",
+            "_type": "request",
+            "name": "Create Product",
+            "method": "POST",
+            "url": "{{ _.base_url }}/products",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Pizza Margherita\",\n  \"description\": \"Pizza tradicional italiana\",\n  \"price\": 35.90,\n  \"category_id\": 1,\n  \"status_id\": 1\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_products"
+        },
+        {
+            "_id": "req_products_show",
+            "_type": "request",
+            "name": "Show Product",
+            "method": "GET",
+            "url": "{{ _.base_url }}/products/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_products"
+        },
+        {
+            "_id": "req_products_update",
+            "_type": "request",
+            "name": "Update Product",
+            "method": "PUT",
+            "url": "{{ _.base_url }}/products/1",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Pizza Margherita Premium\",\n  \"price\": 39.90\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_products"
+        },
+        {
+            "_id": "req_products_destroy",
+            "_type": "request",
+            "name": "Delete Product",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/products/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_products"
+        },
+        {
+            "_id": "folder_clients",
+            "_type": "request_group",
+            "name": "👤 Clients",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_clients_index",
+            "_type": "request",
+            "name": "List Clients",
+            "method": "GET",
+            "url": "{{ _.base_url }}/clients",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_clients"
+        },
+        {
+            "_id": "req_clients_store",
+            "_type": "request",
+            "name": "Create Client",
+            "method": "POST",
+            "url": "{{ _.base_url }}/clients",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Maria Silva\",\n  \"email\": \"maria@example.com\",\n  \"phone\": \"11999999999\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_clients"
+        },
+        {
+            "_id": "req_clients_show",
+            "_type": "request",
+            "name": "Show Client",
+            "method": "GET",
+            "url": "{{ _.base_url }}/clients/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_clients"
+        },
+        {
+            "_id": "req_clients_update",
+            "_type": "request",
+            "name": "Update Client",
+            "method": "PUT",
+            "url": "{{ _.base_url }}/clients/1",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Maria Silva Santos\",\n  \"phone\": \"11988888888\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_clients"
+        },
+        {
+            "_id": "req_clients_destroy",
+            "_type": "request",
+            "name": "Delete Client",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/clients/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_clients"
+        },
+        {
+            "_id": "folder_categories",
+            "_type": "request_group",
+            "name": "📁 Categories",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_categories_index",
+            "_type": "request",
+            "name": "List Categories",
+            "method": "GET",
+            "url": "{{ _.base_url }}/categories",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_categories"
+        },
+        {
+            "_id": "req_categories_index_paginated",
+            "_type": "request",
+            "name": "List Categories (Paginated)",
+            "method": "GET",
+            "url": "{{ _.base_url }}/categories?paginated=S",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_categories"
+        },
+        {
+            "_id": "req_categories_store",
+            "_type": "request",
+            "name": "Create Category",
+            "method": "POST",
+            "url": "{{ _.base_url }}/categories",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Pizzas\",\n  \"description\": \"Pizzas variadas\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_categories"
+        },
+        {
+            "_id": "req_categories_show",
+            "_type": "request",
+            "name": "Show Category",
+            "method": "GET",
+            "url": "{{ _.base_url }}/categories/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_categories"
+        },
+        {
+            "_id": "req_categories_update",
+            "_type": "request",
+            "name": "Update Category",
+            "method": "PUT",
+            "url": "{{ _.base_url }}/categories/1",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Pizzas Especiais\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_categories"
+        },
+        {
+            "_id": "req_categories_destroy",
+            "_type": "request",
+            "name": "Delete Category",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/categories/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_categories"
+        },
+        {
+            "_id": "folder_stocks",
+            "_type": "request_group",
+            "name": "📦 Stocks",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_stocks_index",
+            "_type": "request",
+            "name": "List Stocks",
+            "method": "GET",
+            "url": "{{ _.base_url }}/stocks",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_stocks"
+        },
+        {
+            "_id": "req_stocks_store",
+            "_type": "request",
+            "name": "Create Stock Movement",
+            "method": "POST",
+            "url": "{{ _.base_url }}/stocks",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"product_id\": 1,\n  \"quantity\": 10,\n  \"type\": \"in\",\n  \"observation\": \"Entrada de estoque\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_stocks"
+        },
+        {
+            "_id": "req_stocks_show",
+            "_type": "request",
+            "name": "Show Stock",
+            "method": "GET",
+            "url": "{{ _.base_url }}/stocks/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_stocks"
+        },
+        {
+            "_id": "req_stocks_update",
+            "_type": "request",
+            "name": "Update Stock",
+            "method": "PUT",
+            "url": "{{ _.base_url }}/stocks/1",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"quantity\": 15,\n  \"observation\": \"Ajuste de estoque\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_stocks"
+        },
+        {
+            "_id": "req_stocks_destroy",
+            "_type": "request",
+            "name": "Delete Stock",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/stocks/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_stocks"
+        },
+        {
+            "_id": "folder_ingredients",
+            "_type": "request_group",
+            "name": "🥬 Ingredients",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_ingredients_index",
+            "_type": "request",
+            "name": "List Ingredients",
+            "method": "GET",
+            "url": "{{ _.base_url }}/ingredients",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_ingredients"
+        },
+        {
+            "_id": "req_ingredients_index_paginated",
+            "_type": "request",
+            "name": "List Ingredients (Paginated)",
+            "method": "GET",
+            "url": "{{ _.base_url }}/ingredients?paginated=S",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_ingredients"
+        },
+        {
+            "_id": "req_ingredients_store",
+            "_type": "request",
+            "name": "Create Ingredient",
+            "method": "POST",
+            "url": "{{ _.base_url }}/ingredients",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Mussarela\",\n  \"quantity\": 5.5,\n  \"unit\": \"kg\",\n  \"min_quantity\": 2.0,\n  \"observation\": \"Queijo tipo mussarela\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_ingredients"
+        },
+        {
+            "_id": "req_ingredients_show",
+            "_type": "request",
+            "name": "Show Ingredient",
+            "method": "GET",
+            "url": "{{ _.base_url }}/ingredients/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_ingredients"
+        },
+        {
+            "_id": "req_ingredients_update",
+            "_type": "request",
+            "name": "Update Ingredient",
+            "method": "PUT",
+            "url": "{{ _.base_url }}/ingredients/1",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"quantity\": 7.0,\n  \"min_quantity\": 3.0\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_ingredients"
+        },
+        {
+            "_id": "req_ingredients_destroy",
+            "_type": "request",
+            "name": "Delete Ingredient",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/ingredients/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_ingredients"
+        },
+        {
+            "_id": "folder_orders",
+            "_type": "request_group",
+            "name": "🛒 Orders",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_orders_index",
+            "_type": "request",
+            "name": "List Orders",
+            "method": "GET",
+            "url": "{{ _.base_url }}/orders",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_orders"
+        },
+        {
+            "_id": "req_orders_store",
+            "_type": "request",
+            "name": "Create Order",
+            "method": "POST",
+            "url": "{{ _.base_url }}/orders",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"client_id\": 1,\n  \"payment_method_id\": 1,\n  \"status_id\": 1,\n  \"total\": 85.90,\n  \"products\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2,\n      \"unit_price\": 35.90\n    }\n  ]\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_orders"
+        },
+        {
+            "_id": "req_orders_show",
+            "_type": "request",
+            "name": "Show Order",
+            "method": "GET",
+            "url": "{{ _.base_url }}/orders/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_orders"
+        },
+        {
+            "_id": "req_orders_update",
+            "_type": "request",
+            "name": "Update Order",
+            "method": "PUT",
+            "url": "{{ _.base_url }}/orders/1",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"status_id\": 2\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_orders"
+        },
+        {
+            "_id": "req_orders_destroy",
+            "_type": "request",
+            "name": "Delete Order",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/orders/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_orders"
+        },
+        {
+            "_id": "folder_fees",
+            "_type": "request_group",
+            "name": "💰 Order Fees",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_fees_index",
+            "_type": "request",
+            "name": "List Order Fees",
+            "method": "GET",
+            "url": "{{ _.base_url }}/fees",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_fees"
+        },
+        {
+            "_id": "req_fees_index_paginated",
+            "_type": "request",
+            "name": "List Order Fees (Paginated)",
+            "method": "GET",
+            "url": "{{ _.base_url }}/fees?paginated=S",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_fees"
+        },
+        {
+            "_id": "req_fees_store",
+            "_type": "request",
+            "name": "Create Order Fee",
+            "method": "POST",
+            "url": "{{ _.base_url }}/fees",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"type\": \"delivery\",\n  \"desc\": \"Taxa de entrega\",\n  \"unit_price\": 5.00\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_fees"
+        },
+        {
+            "_id": "req_fees_show",
+            "_type": "request",
+            "name": "Show Order Fee",
+            "method": "GET",
+            "url": "{{ _.base_url }}/fees/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_fees"
+        },
+        {
+            "_id": "req_fees_update",
+            "_type": "request",
+            "name": "Update Order Fee",
+            "method": "PUT",
+            "url": "{{ _.base_url }}/fees/1",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"unit_price\": 7.50\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_fees"
+        },
+        {
+            "_id": "req_fees_destroy",
+            "_type": "request",
+            "name": "Delete Order Fee",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/fees/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_fees"
+        },
+        {
+            "_id": "folder_payment_methods",
+            "_type": "request_group",
+            "name": "💳 Payment Methods",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_payment_methods_index",
+            "_type": "request",
+            "name": "List Payment Methods",
+            "method": "GET",
+            "url": "{{ _.base_url }}/payments-methods",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_payment_methods"
+        },
+        {
+            "_id": "req_payment_methods_store",
+            "_type": "request",
+            "name": "Create Payment Method",
+            "method": "POST",
+            "url": "{{ _.base_url }}/payments-methods",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Cartão de Crédito\",\n  \"description\": \"Pagamento via cartão de crédito\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_payment_methods"
+        },
+        {
+            "_id": "req_payment_methods_show",
+            "_type": "request",
+            "name": "Show Payment Method",
+            "method": "GET",
+            "url": "{{ _.base_url }}/payments-methods/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_payment_methods"
+        },
+        {
+            "_id": "req_payment_methods_update",
+            "_type": "request",
+            "name": "Update Payment Method",
+            "method": "PUT",
+            "url": "{{ _.base_url }}/payments-methods/1",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Cartão de Crédito Visa\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_payment_methods"
+        },
+        {
+            "_id": "req_payment_methods_destroy",
+            "_type": "request",
+            "name": "Delete Payment Method",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/payments-methods/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_payment_methods"
+        },
+        {
+            "_id": "folder_image_products",
+            "_type": "request_group",
+            "name": "🖼️ Product Images",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_image_products_index",
+            "_type": "request",
+            "name": "List Product Images",
+            "method": "GET",
+            "url": "{{ _.base_url }}/image-product/product/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_image_products"
+        },
+        {
+            "_id": "req_image_products_store",
+            "_type": "request",
+            "name": "Upload Product Image",
+            "method": "POST",
+            "url": "{{ _.base_url }}/image-product",
+            "body": {
+                "mimeType": "multipart/form-data"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_image_products"
+        },
+        {
+            "_id": "req_image_products_show",
+            "_type": "request",
+            "name": "Show Product Image",
+            "method": "GET",
+            "url": "{{ _.base_url }}/image-product/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_image_products"
+        },
+        {
+            "_id": "req_image_products_destroy",
+            "_type": "request",
+            "name": "Delete Product Image",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/image-product/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_image_products"
+        }
+    ]
+}

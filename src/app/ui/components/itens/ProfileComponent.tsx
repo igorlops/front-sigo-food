@@ -1,54 +1,186 @@
 import { useAuth } from "@/app/data/context/AuthContext";
 import { UserLoginInterface } from "@/app/data/utils/const/User";
-import { Logout } from "@mui/icons-material";
-import { Avatar, Button, Icon, Menu, MenuItem } from "@mui/material";
+import { Logout, Person, Settings as SettingsIcon } from "@mui/icons-material";
+import {
+    Avatar,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Box,
+    Typography
+} from "@mui/material";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface UserProps {
     user: UserLoginInterface | null;
+    open: boolean;
 }
-export default function ProfileComponent({user}:UserProps) {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [openPopper, setOpenPopper] = useState<boolean>(false);
-    const { setLogout } = useAuth();
 
-    const handleClickPopper = (event: React.MouseEvent<HTMLElement>) => {
+const colors = {
+    accentYellow: '#fcd34d',
+};
+
+export default function ProfileComponent({ user, open }: UserProps) {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const { setLogout } = useAuth();
+    const router = useRouter();
+
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
-        setOpenPopper(!openPopper);
     };
-    const handleCloseMenuPopper = () => {
+
+    const handleClose = () => {
         setAnchorEl(null);
     };
 
     const handleLogout = () => {
         setLogout();
-    }
-    
-    const id = openPopper ? 'simple-popper' : undefined;
+        handleClose();
+    };
+
+    const handleProfile = () => {
+        router.push("/dashboard/perfil");
+        handleClose();
+    };
+
+    const handleSettings = () => {
+        router.push("/dashboard/restaurante");
+        handleClose();
+    };
+
     return (
-        <>
-            <Button onClick={handleClickPopper}  aria-describedby={id} type='button'>
-                <Avatar sx={{bgcolor: user?.photo_profile ? user.photo_profile : user?.primary_color}}>{user?.name.substring(0,1)}</Avatar>
-            </Button>
+        <Box>
+            <ListItemButton
+                onClick={handleClick}
+                sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                    borderRadius: 2,
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                        backgroundColor: 'rgba(252, 211, 77, 0.1)',
+                        transform: 'translateX(4px)',
+                    },
+                }}
+            >
+                <ListItemIcon
+                    sx={{
+                        minWidth: 0,
+                        mr: open ? 2 : 'auto',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Avatar
+                        sx={{
+                            bgcolor: user?.photo_profile ? user.photo_profile : user?.primary_color || colors.accentYellow,
+                            width: 32,
+                            height: 32,
+                            fontSize: '1rem',
+                        }}
+                    >
+                        {user?.name.substring(0, 1)}
+                    </Avatar>
+                </ListItemIcon>
+
+                {open && (
+                    <ListItemText
+                        primary={user?.name}
+                        secondary={user?.email}
+                        sx={{
+                            opacity: open ? 1 : 0,
+                            color: 'white',
+                            '& .MuiTypography-root': {
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                            },
+                            '& .MuiListItemText-secondary': {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                fontSize: '0.75rem',
+                            }
+                        }}
+                    />
+                )}
+            </ListItemButton>
+
             <Menu
-                id="menu-appbar"
                 anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
                 anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
                 }}
-                keepMounted
                 transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: 'bottom',
+                    horizontal: open ? 'left' : 'right',
                 }}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseMenuPopper}
+                sx={{
+                    '& .MuiPaper-root': {
+                        bgcolor: '#1e3a8a',
+                        color: 'white',
+                        ml: open ? 1 : 0,
+                        minWidth: 200,
+                    }
+                }}
             >
-                <MenuItem onClick={() => console.log("Clicado Profile")}>Profile</MenuItem>
-                <MenuItem onClick={() => console.log("MyAccount")}>My account</MenuItem>
-                <MenuItem onClick={handleLogout} sx={{display:"flex",alignItems:"center"}}><Icon sx={{display:"flex",alignItems:"center"}}><Logout/></Icon>Logout</MenuItem>
+                <MenuItem
+                    onClick={handleProfile}
+                    sx={{
+                        gap: 2,
+                        px: 2,
+                        py: 1.5,
+                        '&:hover': {
+                            backgroundColor: 'rgba(252, 211, 77, 0.1)',
+                        }
+                    }}
+                >
+                    <ListItemIcon sx={{ color: 'white', minWidth: 0 }}>
+                        <Person />
+                    </ListItemIcon>
+                    Meu Perfil
+                </MenuItem>
+
+                <MenuItem
+                    onClick={handleSettings}
+                    sx={{
+                        gap: 2,
+                        px: 2,
+                        py: 1.5,
+                        '&:hover': {
+                            backgroundColor: 'rgba(252, 211, 77, 0.1)',
+                        }
+                    }}
+                >
+                    <ListItemIcon sx={{ color: 'white', minWidth: 0 }}>
+                        <SettingsIcon />
+                    </ListItemIcon>
+                    Configurações
+                </MenuItem>
+
+                <MenuItem
+                    onClick={handleLogout}
+                    sx={{
+                        gap: 2,
+                        px: 2,
+                        py: 1.5,
+                        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                        color: '#ff6b6b',
+                        '&:hover': {
+                            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        }
+                    }}
+                >
+                    <ListItemIcon sx={{ color: '#ff6b6b', minWidth: 0 }}>
+                        <Logout />
+                    </ListItemIcon>
+                    Sair
+                </MenuItem>
             </Menu>
-        </>
-    )
+        </Box>
+    );
 }

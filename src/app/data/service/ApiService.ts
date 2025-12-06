@@ -1,34 +1,47 @@
-// ApiService.ts
 "use client"
 import axios from 'axios';
+import Cookies from 'js-cookie'
 
-export const ApiService = axios.create({
-    baseURL: 'http://localhost:8000/api',
+export const WebService = axios.create({
+    baseURL: 'http://localhost:8000',
+    withCredentials: true,
     headers: {
         'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    },
+});
+export const ApiService = axios.create({
+    baseURL: 'http://localhost:8000/api',
+    withCredentials: true,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
     },
 });
 
-// Adiciona o token antes de cada requisição
 ApiService.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token'); // <-- direto do localStorage
+    // O Laravel sempre salva esse cookie como 'XSRF-TOKEN' (não httpOnly)
+    const tokenCookie = Cookies.get('XSRF-TOKEN');
+    const token = localStorage.getItem('token');
+
+    if (tokenCookie) {
+        // Precisamos decodificar porque às vezes vem com encoding de URL
+        config.headers['X-XSRF-TOKEN'] = decodeURIComponent(tokenCookie);
+    }
+
     if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
     }
+
     return config;
-}, (error) => {
-    return Promise.reject(error);
 });
 
-// Interceptor para tratar erros
 ApiService.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
-            // Remove token inválido e redireciona
-            localStorage.removeItem('token');
+        if (error.response?.status === 401 || error.response?.status === 419) {
             localStorage.removeItem('user');
-            window.location.href = '/login';
+            // Opcional: window.location.href = '/login';
         }
         return Promise.reject(error);
     }

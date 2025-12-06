@@ -2,15 +2,15 @@
 import { ApiService } from "./ApiService";
 
 interface responseDataPagination {
-    data: DataProdutoPagination;
+    data: DataUsuarioPagination;
 }
 // Define a estrutura do retorno do serviço
-interface DataProdutoPagination {
-    data: ProdutosPaginados;
+interface DataUsuarioPagination {
+    data: UsuariosPaginados;
     message: string;
     error: boolean;
 }
-export interface ProdutosPaginados {
+export interface UsuariosPaginados {
     data: Array<Usuario>;
     current_page: number;
     first_page_url: string,
@@ -37,7 +37,7 @@ interface responseDataDelete {
     data: {
         data: null,
         error: boolean,
-        message:string
+        message: string
     }
 }
 export interface Usuario {
@@ -66,11 +66,11 @@ export async function buscaUsuarios(): Promise<responseDataPagination | null> {
     }
 }
 
-export async function adicionaUsuario(data:FormData): Promise<responseData | null> {
+export async function adicionaUsuario(data: FormData): Promise<responseData | null> {
     try {
         const response = await ApiService;
         console.log(data)
-        return response.post('/users',data);
+        return response.post('/users', data);
 
     } catch (error) {
         console.error('Erro ao adicionar usuário: ', error);
@@ -78,30 +78,30 @@ export async function adicionaUsuario(data:FormData): Promise<responseData | nul
     }
 }
 
-export async function buscaUsuario(user_id:number): Promise<responseData | null> {
+export async function buscaUsuario(user_id: number): Promise<responseData | null> {
     try {
         const response = await ApiService;
-        return response.get('/users/'+user_id);
+        return response.get('/users/' + user_id);
     } catch (error) {
         console.error('Erro ao buscar usuário:', error);
         return null;
     }
 }
 
-export async function atualizaUsuario(user_id:number,formData:FormData): Promise<responseData | null> {
+export async function atualizaUsuario(user_id: number, formData: FormData): Promise<responseData | null> {
     try {
         const response = await ApiService;
-        return response.put('/users/'+user_id,formData);
+        return response.put('/users/' + user_id, formData);
 
     } catch (error) {
         console.error('Erro ao atualizar usuário: ', error);
         return null;
     }
 }
-export async function deletaUsuario(user_id:number): Promise<responseDataDelete | null> {
+export async function deletaUsuario(user_id: number): Promise<responseDataDelete | null> {
     try {
         const response = await ApiService;
-        return response.delete('/users/'+user_id);
+        return response.delete('/users/' + user_id);
 
     } catch (error) {
         console.error('Erro ao deletar usuário: ', error);
