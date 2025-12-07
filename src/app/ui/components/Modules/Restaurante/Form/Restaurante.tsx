@@ -110,109 +110,157 @@ export default function RestauranteForm({ onSuccess }: FormRestauranteProps) {
         <Box
             component="form"
             onSubmit={handleSubmit}
-            className="px-10 py-10 rounded-xl flex flex-col gap-6 max-w-[600px] bg-gray-100"
+            sx={{
+                p: 4,
+                borderRadius: 3,
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                bgcolor: 'white',
+                minWidth: 400,
+                maxWidth: 600,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+                }
+            }}
         >
-            <Typography variant="h5" className="text-blue-900 font-bold">
+            <Typography
+                variant="h5"
+                sx={{
+                    fontWeight: 'bold',
+                    color: '#1e3a8a',
+                    mb: 3
+                }}
+            >
                 Configurações do Restaurante
             </Typography>
 
             {error && (
-                <Typography variant="body2" color="error">
+                <Typography variant="body2" color="error" sx={{ mb: 2 }}>
                     {error}
                 </Typography>
             )}
 
-            <TextField
-                className="w-full"
-                label="Nome do Restaurante"
-                variant="outlined"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-            />
-
-            <TextField
-                className="w-full"
-                label="E-mail de Contato"
-                variant="outlined"
-                type="email"
-                value={contact_email}
-                onChange={(e) => setContactEmail(e.target.value)}
-                required
-            />
-
-            <TextField
-                className="w-full"
-                label="Telefone"
-                variant="outlined"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-                helperText="Ex: (11) 99999-9999"
-            />
-
-            <TextField
-                className="w-full"
-                label="Tipo de Cozinha"
-                variant="outlined"
-                value={kitchen_type}
-                onChange={(e) => setKitchenType(e.target.value)}
-                required
-                helperText="Ex: Italiana, Brasileira, Japonesa"
-            />
-
-            <TextField
-                className="w-full"
-                label="Slug (URL amigável)"
-                variant="outlined"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
-                required
-                helperText="Ex: meu-restaurante (usado na URL)"
-            />
-
-            <Box className="flex gap-4">
-                <Box className="flex-1">
-                    <Typography variant="body2" className="mb-2">Cor Primária</Typography>
-                    <input
-                        type="color"
-                        value={primary_color}
-                        onChange={(e) => setPrimaryColor(e.target.value)}
-                        className="w-full h-12 rounded cursor-pointer"
-                    />
-                </Box>
-
-                <Box className="flex-1">
-                    <Typography variant="body2" className="mb-2">Cor Secundária</Typography>
-                    <input
-                        type="color"
-                        value={secondary_color}
-                        onChange={(e) => setSecondaryColor(e.target.value)}
-                        className="w-full h-12 rounded cursor-pointer"
-                    />
-                </Box>
-            </Box>
-
-            <Button
-                component="label"
-                variant="outlined"
-                startIcon={<CloudUploadIcon />}
-                className="w-full"
-            >
-                {logo_path ? logo_path.name : 'Upload Logo'}
-                <VisuallyHiddenInput
-                    type="file"
-                    accept="image/*"
-                    onChange={(event) => {
-                        const file = event.target.files?.[0];
-                        if (file) setLogoPath(file);
-                    }}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <TextField
+                    label="Nome do Restaurante"
+                    variant="outlined"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    fullWidth
                 />
-            </Button>
 
-            <Button type="submit" variant="contained" color="primary" className="w-full">
-                Atualizar Restaurante
-            </Button>
+                <TextField
+                    label="E-mail de Contato"
+                    variant="outlined"
+                    type="email"
+                    value={contact_email}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                    required
+                    fullWidth
+                />
+
+                <TextField
+                    label="Telefone"
+                    variant="outlined"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    helperText="Ex: (11) 99999-9999"
+                    fullWidth
+                />
+
+                <TextField
+                    label="Tipo de Cozinha"
+                    variant="outlined"
+                    value={kitchen_type}
+                    onChange={(e) => setKitchenType(e.target.value)}
+                    required
+                    helperText="Ex: Italiana, Brasileira, Japonesa"
+                    fullWidth
+                />
+
+                <TextField
+                    label="Slug (URL amigável)"
+                    variant="outlined"
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
+                    required
+                    helperText="Ex: meu-restaurante (usado na URL)"
+                    fullWidth
+                />
+
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" sx={{ mb: 1 }}>Cor Primária</Typography>
+                        <input
+                            type="color"
+                            value={primary_color}
+                            onChange={(e) => setPrimaryColor(e.target.value)}
+                            style={{
+                                width: '100%',
+                                height: '48px',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                border: '1px solid rgba(0, 0, 0, 0.23)'
+                            }}
+                        />
+                    </Box>
+
+                    <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" sx={{ mb: 1 }}>Cor Secundária</Typography>
+                        <input
+                            type="color"
+                            value={secondary_color}
+                            onChange={(e) => setSecondaryColor(e.target.value)}
+                            style={{
+                                width: '100%',
+                                height: '48px',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                border: '1px solid rgba(0, 0, 0, 0.23)'
+                            }}
+                        />
+                    </Box>
+                </Box>
+
+                <Button
+                    component="label"
+                    variant="outlined"
+                    startIcon={<CloudUploadIcon />}
+                    sx={{
+                        borderColor: '#1e3a8a',
+                        color: '#1e3a8a',
+                        '&:hover': {
+                            borderColor: '#0c1e3f',
+                            bgcolor: 'rgba(30, 58, 138, 0.04)'
+                        }
+                    }}
+                    fullWidth
+                >
+                    {logo_path ? logo_path.name : 'Upload Logo'}
+                    <VisuallyHiddenInput
+                        type="file"
+                        accept="image/*"
+                        onChange={(event) => {
+                            const file = event.target.files?.[0];
+                            if (file) setLogoPath(file);
+                        }}
+                    />
+                </Button>
+
+                <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                        bgcolor: '#1e3a8a',
+                        '&:hover': { bgcolor: '#0c1e3f' }
+                    }}
+                    fullWidth
+                >
+                    Atualizar Restaurante
+                </Button>
+            </Box>
         </Box>
     );
 }

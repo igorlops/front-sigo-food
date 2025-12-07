@@ -83,59 +83,87 @@ export default function TaxaPedidoForm({ onSuccess, taxa_id }: FormTaxaPedidoPro
         <Box
             component="form"
             onSubmit={handleSubmit}
-            className="px-10 py-10 rounded-xl flex flex-col gap-6 items-center min-w-[400px] bg-gray-100"
+            sx={{
+                p: 4,
+                borderRadius: 3,
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                bgcolor: 'white',
+                minWidth: 400,
+                maxWidth: 600,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+                }
+            }}
         >
-            <Typography variant="h5" className="text-blue-900 font-bold">
+            <Typography
+                variant="h5"
+                sx={{
+                    fontWeight: 'bold',
+                    color: '#1e3a8a',
+                    mb: 3
+                }}
+            >
                 {taxa_id ? 'Editar Taxa' : 'Adicionar Taxa'}
             </Typography>
 
             {error && (
-                <Typography variant="body2" color="error">
+                <Typography variant="body2" color="error" sx={{ mb: 2 }}>
                     {error}
                 </Typography>
             )}
 
-            <FormControl className="w-full">
-                <InputLabel id="type-label">Tipo de Taxa</InputLabel>
-                <Select
-                    labelId="type-label"
-                    value={type}
-                    label="Tipo de Taxa"
-                    onChange={(e) => setType(e.target.value)}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <FormControl fullWidth>
+                    <InputLabel id="type-label">Tipo de Taxa</InputLabel>
+                    <Select
+                        labelId="type-label"
+                        value={type}
+                        label="Tipo de Taxa"
+                        onChange={(e) => setType(e.target.value)}
+                        required
+                    >
+                        {tiposTaxa.map((tipo) => (
+                            <MenuItem key={tipo.value} value={tipo.value}>
+                                {tipo.label}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+
+                <TextField
+                    label="Descrição"
+                    variant="outlined"
+                    value={desc}
+                    onChange={(e) => setDesc(e.target.value)}
                     required
+                    helperText="Ex: Taxa de entrega para região central"
+                    fullWidth
+                />
+
+                <TextField
+                    label="Valor (R$)"
+                    variant="outlined"
+                    type="number"
+                    inputProps={{ step: "0.01", min: "0" }}
+                    value={unit_price}
+                    onChange={(e) => setUnitPrice(e.target.value)}
+                    required
+                    fullWidth
+                />
+
+                <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                        bgcolor: '#1e3a8a',
+                        '&:hover': { bgcolor: '#0c1e3f' }
+                    }}
+                    fullWidth
                 >
-                    {tiposTaxa.map((tipo) => (
-                        <MenuItem key={tipo.value} value={tipo.value}>
-                            {tipo.label}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-
-            <TextField
-                className="w-full"
-                label="Descrição"
-                variant="outlined"
-                value={desc}
-                onChange={(e) => setDesc(e.target.value)}
-                required
-                helperText="Ex: Taxa de entrega para região central"
-            />
-
-            <TextField
-                className="w-full"
-                label="Valor (R$)"
-                variant="outlined"
-                type="number"
-                inputProps={{ step: "0.01", min: "0" }}
-                value={unit_price}
-                onChange={(e) => setUnitPrice(e.target.value)}
-                required
-            />
-
-            <Button type="submit" variant="contained" color="primary" className="w-full">
-                {taxa_id ? 'Atualizar' : 'Adicionar'}
-            </Button>
+                    {taxa_id ? 'Atualizar' : 'Adicionar'}
+                </Button>
+            </Box>
         </Box>
     );
 }

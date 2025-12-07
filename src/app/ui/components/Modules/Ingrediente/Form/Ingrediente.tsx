@@ -91,79 +91,107 @@ export default function IngredienteForm({ onSuccess, ingrediente_id }: FormIngre
         <Box
             component="form"
             onSubmit={handleSubmit}
-            className="px-10 py-10 rounded-xl flex flex-col gap-6 items-center min-w-[400px] bg-gray-100"
+            sx={{
+                p: 4,
+                borderRadius: 3,
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                bgcolor: 'white',
+                minWidth: 400,
+                maxWidth: 600,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+                }
+            }}
         >
-            <Typography variant="h5" className="text-blue-900 font-bold">
+            <Typography
+                variant="h5"
+                sx={{
+                    fontWeight: 'bold',
+                    color: '#1e3a8a',
+                    mb: 3
+                }}
+            >
                 {ingrediente_id ? 'Editar Ingrediente' : 'Adicionar Ingrediente'}
             </Typography>
 
             {error && (
-                <Typography variant="body2" color="error">
+                <Typography variant="body2" color="error" sx={{ mb: 2 }}>
                     {error}
                 </Typography>
             )}
 
-            <TextField
-                className="w-full"
-                label="Nome do Ingrediente"
-                variant="outlined"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-            />
-
-            <Box className="flex gap-4 w-full">
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <TextField
-                    className="flex-1"
-                    label="Quantidade"
+                    label="Nome do Ingrediente"
+                    variant="outlined"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    fullWidth
+                />
+
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                    <TextField
+                        sx={{ flex: 1 }}
+                        label="Quantidade"
+                        variant="outlined"
+                        type="number"
+                        inputProps={{ step: "0.01", min: "0" }}
+                        value={quantity}
+                        onChange={(e) => setQuantity(e.target.value)}
+                        required
+                    />
+
+                    <FormControl sx={{ flex: 1 }}>
+                        <InputLabel id="unit-label">Unidade</InputLabel>
+                        <Select
+                            labelId="unit-label"
+                            value={unit}
+                            label="Unidade"
+                            onChange={(e) => setUnit(e.target.value)}
+                        >
+                            {unidades.map((u) => (
+                                <MenuItem key={u} value={u}>
+                                    {u}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
+
+                <TextField
+                    label="Quantidade Mínima (opcional)"
                     variant="outlined"
                     type="number"
                     inputProps={{ step: "0.01", min: "0" }}
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    required
+                    value={min_quantity}
+                    onChange={(e) => setMinQuantity(e.target.value)}
+                    fullWidth
                 />
 
-                <FormControl className="flex-1">
-                    <InputLabel id="unit-label">Unidade</InputLabel>
-                    <Select
-                        labelId="unit-label"
-                        value={unit}
-                        label="Unidade"
-                        onChange={(e) => setUnit(e.target.value)}
-                    >
-                        {unidades.map((u) => (
-                            <MenuItem key={u} value={u}>
-                                {u}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <TextField
+                    label="Observação (opcional)"
+                    variant="outlined"
+                    multiline
+                    rows={3}
+                    value={observation}
+                    onChange={(e) => setObservation(e.target.value)}
+                    fullWidth
+                />
+
+                <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                        bgcolor: '#1e3a8a',
+                        '&:hover': { bgcolor: '#0c1e3f' }
+                    }}
+                    fullWidth
+                >
+                    {ingrediente_id ? 'Atualizar' : 'Adicionar'}
+                </Button>
             </Box>
-
-            <TextField
-                className="w-full"
-                label="Quantidade Mínima (opcional)"
-                variant="outlined"
-                type="number"
-                inputProps={{ step: "0.01", min: "0" }}
-                value={min_quantity}
-                onChange={(e) => setMinQuantity(e.target.value)}
-            />
-
-            <TextField
-                className="w-full"
-                label="Observação (opcional)"
-                variant="outlined"
-                multiline
-                rows={3}
-                value={observation}
-                onChange={(e) => setObservation(e.target.value)}
-            />
-
-            <Button type="submit" variant="contained" color="primary" className="w-full">
-                {ingrediente_id ? 'Atualizar' : 'Adicionar'}
-            </Button>
         </Box>
     );
 }
