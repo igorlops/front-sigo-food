@@ -50,11 +50,10 @@ export default function FormEstoques({ onSuccess, estoque_id }: FormEstoquesProp
       const response = await buscaEstoque(id);
       if (response?.data.data && response.data.data.length > 0) {
         const estoque = response.data.data[0];
-        setIdProduct(estoque.id_product);
+        setIdProduct(estoque.product_id);
         setQuantity(String(estoque.quantity));
-        // Note: type and observation may not exist in current API
-        // setType(estoque.type || 'in');
-        // setObservation(estoque.observation || '');
+        setType(estoque.type || 'in');
+        setObservation(estoque.observation || '');
       }
     } catch (err) {
       console.error('Erro ao buscar estoque:', err);
@@ -72,7 +71,7 @@ export default function FormEstoques({ onSuccess, estoque_id }: FormEstoquesProp
     }
 
     const formData = new FormData();
-    formData.append('id_product', String(id_product));
+    formData.append('product_id', String(id_product));
     formData.append('quantity', quantity);
     formData.append('type', type);
     if (observation) {
@@ -82,7 +81,7 @@ export default function FormEstoques({ onSuccess, estoque_id }: FormEstoquesProp
     try {
       const response = estoque_id
         ? await atualizaEstoque(estoque_id, formData)
-        : await adicionaEstoque(id_product, Number(quantity));
+        : await adicionaEstoque(id_product, Number(quantity), type, observation);
 
       if (!response?.data.error) {
         setIdProduct(null);

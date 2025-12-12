@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { adicionaProdutos, atualizaProduto, buscaProduto} from "@/app/data/service/ProdutoService";
+import { adicionaProdutos, atualizaProduto, buscaProduto } from "@/app/data/service/ProdutoService";
 import { Box, Button, FormControl, FormControlLabel, InputLabel, MenuItem, Select, styled, Switch, TextField, Typography } from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { buscaCategorias, Categoria } from "@/app/data/service/CategoriaService";
@@ -18,17 +18,13 @@ export default function PedidosForm({ onSuccess, pedido_id }: FormPedidoProps) {
     const [name, setName] = useState<string | null>('');
     const [category_id, setCategoryId] = useState<number | null>(null);
     const [description, setDescription] = useState<string | null>('');
-    const [price, setPrice] = useState<string| null>('');
+    const [price, setPrice] = useState<string | null>('');
     const [status, setStatus] = useState<string | null>(''); // O status inicial é 'Ativo'
     const [error, setError] = useState('');
     const [categorias, setCategorias] = useState<Categoria[]>([]);
 
     const userLocalStorage = UserLocalStorage();
-    if (!userLocalStorage || userLocalStorage.restaurant_id === null) {
-        setError("Usuário não está logado ou restaurante não encontrado.");
-        return null; 
-    }
-    const restaurant_id = userLocalStorage.restaurant_id;
+    const restaurant_id = userLocalStorage?.restaurant_id;
 
     const fetchCategorias = async () => {
         try {
@@ -41,16 +37,16 @@ export default function PedidosForm({ onSuccess, pedido_id }: FormPedidoProps) {
             setError('Erro ao buscar categorias');
         }
     };
-    const fetchProdutoId = async (product_id:number) => {
+    const fetchProdutoId = async (product_id: number) => {
         try {
             const response = await buscaProduto(product_id);
             if (response?.data.data && response.data.data.length > 0) {
                 const produto = response.data.data[0];
-                if(produto != null) {
+                if (produto != null) {
                     setCategoryId(produto.category_id)
                     setDescription(produto.description)
                     setPrice(produto.price)
-                    setStatus(produto.status)
+                    setStatus(produto.status.description)
                     setName(produto.name)
                 }
             }
@@ -67,10 +63,18 @@ export default function PedidosForm({ onSuccess, pedido_id }: FormPedidoProps) {
     }, []);
 
     useEffect(() => {
-        if(pedido_id != null) {
+        if (pedido_id != null) {
             fetchProdutoId(pedido_id);
         }
-    },[pedido_id])
+    }, [pedido_id])
+
+    if (!userLocalStorage || userLocalStorage.restaurant_id === null) {
+        return (
+            <Box className="p-4">
+                <Typography color="error">Usuário não está logado ou restaurante não encontrado.</Typography>
+            </Box>
+        );
+    }
 
     const handleAdicionaProduto = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -110,7 +114,7 @@ export default function PedidosForm({ onSuccess, pedido_id }: FormPedidoProps) {
         if (status) formData.append('status', status);
         if (restaurant_id) formData.append('restaurant_id', String(restaurant_id));
 
-        if(pedido_id) {
+        if (pedido_id) {
             try {
                 const response = await atualizaProduto(pedido_id, formData);
                 if (!response?.data.error) {
@@ -150,7 +154,7 @@ export default function PedidosForm({ onSuccess, pedido_id }: FormPedidoProps) {
             onSubmit={pedido_id ? handleEditaProduto : handleAdicionaProduto}
             className="px-10 py-10 rounded-xl flex flex-col gap-6 items-center min-w-[400px] bg-gray-100 max-h-[100vh]"
         >
-                                
+
             <Typography variant="h5" justifyContent={"center"}>Adicionar produto</Typography>
             {error && (
                 <Typography variant="body2" color="error">
@@ -184,11 +188,11 @@ export default function PedidosForm({ onSuccess, pedido_id }: FormPedidoProps) {
                                     setCategoryId(value === '' ? null : Number(value));
                                 }}
                             >
-                            {categorias?.map((categoria) => (
-                                <MenuItem key={categoria.id} value={categoria.id}>
-                                    {categoria.name}
-                                </MenuItem>
-                            ))}
+                                {categorias?.map((categoria) => (
+                                    <MenuItem key={categoria.id} value={categoria.id}>
+                                        {categoria.name}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Box>

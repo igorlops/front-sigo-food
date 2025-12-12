@@ -1,19 +1,19 @@
 'use client';
 
 import { useState } from "react";
-import { ShowEstoque } from "@/app/data/service/EstoqueService";
+import { Estoque, ShowEstoque } from "@/app/data/service/EstoqueService";
 import { Typography } from "@mui/material";
 import TableComponent, { Column } from "../../../itens/TableComponent";
 import ActionsComponents from "../../../itens/ActionsComponents";
 import { LoadingState } from "../../../itens/LoadingState";
 
 interface EstoqueProps {
-    estoques: ShowEstoque[] | null
+    estoques: Estoque[] | null
     loading: boolean
     handleShow: (product_id: number) => void
 }
 export default function Estoques({ estoques, loading, handleShow }: EstoqueProps) {
-    const columns: Column<ShowEstoque>[] = [
+    const columns: Column<Estoque>[] = [
         {
             label: 'Ações',
             render: (row) => (
@@ -26,12 +26,12 @@ export default function Estoques({ estoques, loading, handleShow }: EstoqueProps
             ),
         },
         {
-            label: 'Produto',
-            render: (row) => row.product_name,
-        },
-        {
             label: 'Quantidade',
             render: (row) => row.quantity,
+        },
+        {
+            label: 'Tipo',
+            render: (row) => row.type,
         }
     ];
     const [error, setError] = useState(false);

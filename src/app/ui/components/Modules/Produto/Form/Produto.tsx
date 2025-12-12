@@ -25,11 +25,8 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
     const [categorias, setCategorias] = useState<Categoria[]>([]);
 
     const userLocalStorage = UserLocalStorage();
-    if (!userLocalStorage || userLocalStorage.restaurant_id === null) {
-        setError("Usuário não está logado ou restaurante não encontrado.");
-        return null;
-    }
-    const restaurant_id = userLocalStorage.restaurant_id;
+
+    const restaurant_id = userLocalStorage?.restaurant_id;
 
     const fetchCategorias = async () => {
         try {
@@ -51,7 +48,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
                     setCategoryId(produto.category_id)
                     setDescription(produto.description)
                     setPrice(produto.price)
-                    setStatus(produto.status.id)
+                    setStatus(produto.status_id)
                     setName(produto.name)
                 }
             }
@@ -81,6 +78,14 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
             };
         }
     }, [image_path])
+
+    if (!userLocalStorage || userLocalStorage.restaurant_id === null) {
+        return (
+            <Box sx={{ p: 4 }}>
+                <Typography color="error">Usuário não está logado ou restaurante não encontrado.</Typography>
+            </Box>
+        );
+    }
 
     const handleAdicionaProduto = async (e: React.FormEvent) => {
         e.preventDefault();

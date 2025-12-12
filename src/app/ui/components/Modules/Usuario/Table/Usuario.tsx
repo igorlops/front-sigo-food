@@ -1,49 +1,67 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { buscaUsuarios, Usuario } from "@/app/data/service/UsuarioService";
-import { Typography, List, ListItem, ListItemText } from "@mui/material";
+import { buscaUsuarios, Usuario, UsuariosPaginados } from "@/app/data/service/UsuarioService";
+import { Typography, List, ListItem, ListItemText, Box, Pagination } from "@mui/material";
+import { LoadingState } from "../../../itens/LoadingState";
+import TableComponent, { Column } from "../../../itens/TableComponent";
+import ActionsComponents from "../../../itens/ActionsComponents";
+interface UsuarioProps {
+    usuarios: UsuariosPaginados | null;
+    loading: boolean;
+    handleEditar: (id: number) => void;
+    handleExcluir: (id: number) => void;
+    handlePageChange: (page: number) => void;
+}
 
-export default function Usuarios() {
-    // Especificar o tipo de estado corretamente
-    const [usuarios, setUsuarios] = useState<Usuario[]>([]); // Agora o estado é um array de Usuario
-    const [error, setError] = useState(false);
+export default function Usuarios({ usuarios, loading, handlePageChange, handleEditar, handleExcluir }: UsuarioProps) {
 
-    useEffect(() => {
-        // Função assíncrona para buscar Usuarios
-        async function fetchUsuarios() {
-            try {
-                const response = await buscaUsuarios();
-                console.log(response?.data)
-                if (response?.data) {
-                    setUsuarios(response.data.data); // Atualiza o estado com as Usuarios
-                }
-            } catch (err) {
-                console.error("Erro ao buscar Usuarios:", err);
-                setError(true);
-            }
+    const columns: Column<Usuario>[] = [
+        {
+            label: 'Ações',
+            render: (row) => (
+                <ActionsComponents
+                    handleEditar={handleEditar}
+                    handleExcluir={handleExcluir}
+                    handleShow={() => null}
+                    id={row.id}
+                />
+            ),
+        },
+        {
+            label: 'Nome',
+            render: (row) => row.name,
+        },
+        {
+            label: 'Email',
+            render: (row) => row.email,
         }
-
-        fetchUsuarios();
-    }, []); // O array vazio garante que a função execute apenas uma vez
+    ];
 
     return (
         <>
-            <Typography component="h2" variant="h5">
-                Componentes de Usuarios
-            </Typography>
-            {error ? (
-                <Typography component="p" color="error">
-                    Não foi possível carregar as Usuarios.
-                </Typography>
+            {loading ? (
+                <LoadingState />
             ) : (
-                <List>
-                    {usuarios.map((usuario) => (
-                        <ListItem key={usuario.id}>
-                            <ListItemText primary={usuario.name} />
-                        </ListItem>
-                    ))}
-                </List>
+                <>
+                    <TableComponent
+                        columns={columns}
+                        data={usuarios?.data ?? []}
+                    />
+
+                    {usuarios && usuarios.data.length > 0 && (
+                        <Box className="flex justify-center py-10">
+                            <Pagination
+                                count={usuarios?.last_page ?? 1}
+                                page={usuarios?.current_page ?? 1}
+                                onChange={(e, value) => {
+                                    handlePageChange(value)
+                                }}
+                                color="primary"
+                            />
+                        </Box>
+                    )}
+                </>
             )}
         </>
     );

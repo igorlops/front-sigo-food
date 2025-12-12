@@ -16,12 +16,12 @@ interface PedidoProps {
     handleExcluir: (id: number) => void;
     handlePageChange: (page: number) => void;
 }
-export default function Pedidos({pedidos, loading, handlePageChange, handleEditar, handleExcluir}:  PedidoProps) {
+export default function Pedidos({ pedidos, loading, handlePageChange, handleEditar, handleExcluir }: PedidoProps) {
     const columns: Column<Pedido>[] = [
         {
             label: 'Ações',
             render: (row) => (
-                <ActionsComponents 
+                <ActionsComponents
                     handleEditar={handleEditar}
                     handleExcluir={handleExcluir}
                     handleShow={() => null}
@@ -31,7 +31,7 @@ export default function Pedidos({pedidos, loading, handlePageChange, handleEdita
         },
         {
             label: 'Cliente',
-            render: (row) => row.client_id,
+            render: (row) => row.client_name,
         },
         {
             label: 'Endereço',
@@ -43,7 +43,7 @@ export default function Pedidos({pedidos, loading, handlePageChange, handleEdita
         },
         {
             label: 'Status',
-            render: (row) => row.status,
+            render: (row) => row.status_name,
         },
     ];
     const [error, setError] = useState(false);
@@ -51,7 +51,7 @@ export default function Pedidos({pedidos, loading, handlePageChange, handleEdita
     return (
         <>
             {loading ? (
-                <LoadingState/>
+                <LoadingState />
             ) : (
                 <>
                     <TableComponent
@@ -60,7 +60,7 @@ export default function Pedidos({pedidos, loading, handlePageChange, handleEdita
                     />
 
                     {pedidos && pedidos.data.length > 0 && (
-                         <Box className="flex justify-center py-10">
+                        <Box className="flex justify-center py-10">
                             <Pagination
                                 count={pedidos?.last_page ?? 1}
                                 page={pedidos?.current_page ?? 1}

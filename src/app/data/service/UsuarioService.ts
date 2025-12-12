@@ -56,10 +56,10 @@ interface DataUsuario {
     error: boolean;
 }
 
-export async function buscaUsuarios(): Promise<responseDataPagination | null> {
+export async function buscaUsuarios(current_page: number): Promise<responseDataPagination | null> {
     try {
         const response = await ApiService;
-        return response.get('/users');
+        return response.get('/users?page=' + current_page);
     } catch (error) {
         console.error('Erro ao buscar Usuarios:', error);
         return null;

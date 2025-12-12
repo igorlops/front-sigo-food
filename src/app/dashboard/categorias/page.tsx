@@ -2,7 +2,7 @@
 
 import Categorias from '@/app/ui/components/Modules/Categoria/Table/Categorias';
 import FormCategorias from '@/app/ui/components/Modules/Categoria/Form/Categorias';
-import { buscaCategorias, buscaCategoriasPaginadas, CategoriasPaginadas, deletaCategoria } from '@/app/data/service/CategoriaService';
+import { buscaCategoriasPaginadas, CategoriasPaginadas, deletaCategoria } from '@/app/data/service/CategoriaService';
 import { useEffect, useState } from 'react';
 import { Alert, Collapse, IconButton, Typography } from '@mui/material';
 import ButtonCreateNew from '@/app/ui/components/itens/ButtonCreateNew';
@@ -21,22 +21,22 @@ export default function CategoriaPage() {
   const [message_deletado, setMensagemDeletado] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState<number>(1)
 
-  const handleClose=()=> {
+  const handleClose = () => {
     setModalVisible(false)
   }
-  const handleEditar = (categoria_id:number) => {
-    if(confirm("Você deseja editar o produto?")) {
+  const handleEditar = (categoria_id: number) => {
+    if (confirm("Você deseja editar o produto?")) {
       setCategoriaId(categoria_id)
       setModalVisible(true);
     }
   }
-  const handleExcluir = (categoria_id:number) => {
-    if(confirm("Você deseja excluir o produto?")) {
+  const handleExcluir = (categoria_id: number) => {
+    if (confirm("Você deseja excluir o produto?")) {
       setDeletarCategoriaId(categoria_id)
       setOpenAlert(true)
     }
   }
-  const handlePageChange = (page:number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page)
   }
 
@@ -54,22 +54,22 @@ export default function CategoriaPage() {
     }
   };
 
-  const fetchDeletarProduto = async (categoria_id:number) => {
+  const fetchDeletarProduto = async (categoria_id: number) => {
     try {
       setLoading(true)
       const response = await deletaCategoria(categoria_id);
-      if(response && response?.data.data)  {
+      if (response && response?.data.data) {
         setMensagemDeletado(response.data.message);
       }
       setLoading(false)
-    } catch(e) {
+    } catch (e) {
       console.error("Erro ao deletar produto");
       setError(true);
     }
   }
 
-  useEffect(() => { 
-    if(deletar_categoria_id != null) {
+  useEffect(() => {
+    if (deletar_categoria_id != null) {
       fetchDeletarProduto(deletar_categoria_id)
     }
     return () => {
@@ -81,14 +81,14 @@ export default function CategoriaPage() {
 
   useEffect(() => {
     fetchCategorias();
-  }, [currentPage]); // Atualiza apenas no primeiro carregamento
+  }, [currentPage])
 
   return (
     <div>
       <Typography component="h1" variant="h4" className='text-center'>
         Categorias
       </Typography>
-      <Breadcrumb data_breadcrumb={[{label:'Categoria', link:'categorias'}]}/>
+      <Breadcrumb data_breadcrumb={[{ label: 'Categoria', link: 'categorias' }]} />
       <Collapse in={openAlert}>
         <Alert
           action={
@@ -110,12 +110,12 @@ export default function CategoriaPage() {
       </Collapse>
       <p className='text-red-500 text-sm'>{error}</p>
       <div>
-          <ButtonCreateNew description="Criar nova categoria" handleViewForm={() => {setModalVisible(!modalVisible); setCategoriaId(null)}}/>
+        <ButtonCreateNew description="Criar nova categoria" handleViewForm={() => { setModalVisible(!modalVisible); setCategoriaId(null) }} />
       </div>
       <Categorias categorias={categorias} loading={loading} handleEditar={handleEditar} handleExcluir={handleExcluir} handlePageChange={handlePageChange} />
       {/* <FormCategorias onSuccess={fetchCategorias} /> */}
       <ModalComponent
-        content={<FormCategorias onSuccess={fetchCategorias} categoria_id={categoria_id}/>}
+        content={<FormCategorias onSuccess={fetchCategorias} categoria_id={categoria_id} />}
         open={modalVisible}
         handleClose={handleClose}
       />

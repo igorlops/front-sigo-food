@@ -3,9 +3,9 @@ import { Box, IconButton, Tooltip } from "@mui/material";
 
 interface ActionsComponentProps {
     id: number;
-    handleEditar: (id: number) => void | undefined | null;
-    handleExcluir: (id: number) => void | undefined | null;
-    handleShow: (id: number) => void | undefined | null;
+    handleEditar?: ((id: number) => void | undefined | null) | null;
+    handleExcluir?: ((id: number) => void | undefined | null) | null;
+    handleShow?: ((id: number) => void | undefined | null) | null;
 }
 
 const colors = {
