@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie'
 
 export const WebService = axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: 'http://127.0.0.1:8000',
     withCredentials: true,
     headers: {
         'Accept': 'application/json',
@@ -11,7 +11,7 @@ export const WebService = axios.create({
     },
 });
 export const ApiService = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: 'http://127.0.0.1:8000/api',
     withCredentials: true,
     headers: {
         'Accept': 'application/json',
