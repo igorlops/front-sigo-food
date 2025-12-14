@@ -3,6 +3,17 @@
 import React, { useState } from 'react';
 import { Produto } from '@/app/data/service/ProdutoService';
 import { useCart } from '@/context/CartContext';
+import {
+    Card,
+    CardMedia,
+    CardContent,
+    CardActions,
+    Typography,
+    Button,
+    Box,
+    Chip
+} from '@mui/material';
+import { AddShoppingCart as AddCartIcon, Check as CheckIcon } from '@mui/icons-material';
 
 interface ProductCardProps {
     product: Produto;
@@ -16,44 +27,86 @@ export default function ProductCard({ product }: ProductCardProps) {
         setIsAdding(true);
         addToCart(product, 1);
 
-        // Feedback visual simples
         setTimeout(() => setIsAdding(false), 500);
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex flex-col justify-between hover:shadow-md transition-shadow">
-            {product.image_path && (
-                <div className="relative w-full h-40 mb-4 overflow-hidden rounded-md group">
-                    <img
-                        src={product.image_path}
-                        alt={product.name || 'Produto'}
-                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                    />
-                </div>
+        <Card
+            elevation={1}
+            sx={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                transition: 'all 0.3s',
+                '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: 3
+                },
+                borderRadius: 3,
+                overflow: 'hidden'
+            }}
+        >
+            {product.image_path ? (
+                <CardMedia
+                    component="img"
+                    height="180"
+                    image={product.image_path}
+                    alt={product.name || 'Produto'}
+                    sx={{ objectFit: 'cover' }}
+                />
+            ) : (
+                <Box
+                    sx={{
+                        height: 180,
+                        bgcolor: 'grey.100',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'text.disabled'
+                    }}
+                >
+                    <Typography variant="caption">Sem imagem</Typography>
+                </Box>
             )}
 
-            <div className="flex-1">
-                <h3 className="font-semibold text-gray-800 text-lg mb-1">{product.name}</h3>
-                <p className="text-gray-500 text-sm mb-3 line-clamp-2">{product.description}</p>
-            </div>
+            <CardContent sx={{ flexGrow: 1, pb: 1 }}>
+                <Typography gutterBottom variant="h6" component="div" fontWeight="bold" sx={{ lineHeight: 1.2 }}>
+                    {product.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{
+                    display: '-webkit-box',
+                    overflow: 'hidden',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 2,
+                    mb: 1
+                }}>
+                    {product.description}
+                </Typography>
+            </CardContent>
 
-            <div className="flex items-center justify-between mt-4">
-                <span className="font-bold text-green-600 text-lg">
-                    R$ {product.price}
-                </span>
+            <Box sx={{ px: 2, pb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant="h6" color="primary.main" fontWeight="bold">
+                    R$ {Number(product.price).toFixed(2)}
+                </Typography>
 
-                <button
+                <Button
+                    variant={isAdding ? "outlined" : "contained"}
+                    color={isAdding ? "success" : "primary"}
                     onClick={handleAddToCart}
                     disabled={isAdding}
-                    style={!isAdding ? { backgroundColor: 'var(--color-primary, #2563eb)' } : {}}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${isAdding
-                        ? 'bg-green-100 text-green-700'
-                        : 'text-white hover:opacity-90'
-                        }`}
+                    startIcon={isAdding ? <CheckIcon /> : <AddCartIcon />}
+                    size="small"
+                    sx={{
+                        borderRadius: 10,
+                        textTransform: 'none',
+                        px: 2,
+                        fontWeight: 'medium',
+                        minWidth: 100
+                    }}
                 >
-                    {isAdding ? 'Adicionado!' : 'Adicionar'}
-                </button>
-            </div>
-        </div>
+                    {isAdding ? 'Adicionado' : 'Adicionar'}
+                </Button>
+            </Box>
+        </Card>
     );
 }

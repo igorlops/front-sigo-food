@@ -2,13 +2,24 @@
 
 import React from 'react';
 import { useOrder, OrderType } from '@/context/OrderContext';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import {
+    Box,
+    Button,
+    Typography,
+    Grid,
+    Paper,
+    Fade
+} from '@mui/material';
+import {
+    DeliveryDining as DeliveryIcon,
+    Storefront as PickupIcon,
+    ArrowForward
+} from '@mui/icons-material';
 
 export default function OrderTypeSelector() {
     const { orderType, setOrderType } = useOrder();
     const router = useRouter();
-    const pathname = usePathname();
-    const tenant = pathname.split('/')[1];
 
     const handleSelect = (type: OrderType) => {
         setOrderType(type);
@@ -16,63 +27,141 @@ export default function OrderTypeSelector() {
 
     const handleContinue = () => {
         if (orderType) {
-            router.push(`/${tenant}/produtos`);
+            router.push(`/produtos`);
         }
     };
 
     return (
-        <div className="w-full">
-            <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">Como você deseja receber seu pedido?</h2>
+        <Box sx={{ width: '100%', maxWidth: 800, mx: 'auto', p: 2 }}>
+            <Typography variant="h4" fontWeight="bold" align="center" gutterBottom color="text.primary">
+                Como você deseja receber seu pedido?
+            </Typography>
+            <Typography variant="body1" align="center" color="text.secondary" sx={{ mb: 6 }}>
+                Escolha a opção que melhor se adapta a você hoje
+            </Typography>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <button
-                    onClick={() => handleSelect('delivery')}
-                    className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center justify-center gap-4 h-48
-                        ${orderType === 'delivery'
-                            ? 'border-blue-600 bg-blue-50 ring-2 ring-blue-200'
-                            : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
-                        }`}
-                >
-                    <div className={`p-4 rounded-full ${orderType === 'delivery' ? 'bg-blue-200' : 'bg-gray-100'}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                            {/* Icone Moto/Delivery simples */}
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
-                    <span className="font-bold text-lg text-gray-700">Entrega (Delivery)</span>
-                    <p className="text-sm text-gray-500">Vamos levar até você</p>
-                </button>
+            <Grid container spacing={3} sx={{ mb: 6 }}>
+                <Grid item xs={12} md={6}>
+                    <Paper
+                        component="button"
+                        onClick={() => handleSelect('delivery')}
+                        elevation={orderType === 'delivery' ? 4 : 1}
+                        sx={{
+                            width: '100%',
+                            p: 4,
+                            borderRadius: 4,
+                            border: '2px solid',
+                            borderColor: orderType === 'delivery' ? '#2563eb' : 'transparent',
+                            bgcolor: orderType === 'delivery' ? '#eff6ff' : 'background.paper',
+                            transition: 'all 0.3s ease',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: 2,
+                            cursor: 'pointer',
+                            '&:hover': {
+                                transform: 'translateY(-4px)',
+                                borderColor: orderType === 'delivery' ? '#2563eb' : 'grey.300',
+                                boxShadow: 3
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                p: 2,
+                                borderRadius: '50%',
+                                bgcolor: orderType === 'delivery' ? '#dbeafe' : 'grey.100',
+                                color: orderType === 'delivery' ? '#1d4ed8' : 'grey.600'
+                            }}
+                        >
+                            <DeliveryIcon sx={{ fontSize: 40 }} />
+                        </Box>
+                        <Box>
+                            <Typography variant="h6" fontWeight="bold" color="text.primary">
+                                Entrega (Delivery)
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Vamos levar até você
+                            </Typography>
+                        </Box>
+                    </Paper>
+                </Grid>
 
-                <button
-                    onClick={() => handleSelect('pickup')}
-                    className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center justify-center gap-4 h-48
-                        ${orderType === 'pickup'
-                            ? 'border-orange-600 bg-orange-50 ring-2 ring-orange-200'
-                            : 'border-gray-200 hover:border-orange-300 hover:bg-gray-50'
-                        }`}
-                >
-                    <div className={`p-4 rounded-full ${orderType === 'pickup' ? 'bg-orange-200' : 'bg-gray-100'}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-orange-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                    </div>
-                    <span className="font-bold text-lg text-gray-700">Retirada no Balcão</span>
-                    <p className="text-sm text-gray-500">Você busca no restaurante</p>
-                </button>
-            </div>
+                <Grid item xs={12} md={6}>
+                    <Paper
+                        component="button"
+                        onClick={() => handleSelect('pickup')}
+                        elevation={orderType === 'pickup' ? 4 : 1}
+                        sx={{
+                            width: '100%',
+                            p: 4,
+                            borderRadius: 4,
+                            border: '2px solid',
+                            borderColor: orderType === 'pickup' ? '#ea580c' : 'transparent',
+                            bgcolor: orderType === 'pickup' ? '#fff7ed' : 'background.paper',
+                            transition: 'all 0.3s ease',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: 2,
+                            cursor: 'pointer',
+                            '&:hover': {
+                                transform: 'translateY(-4px)',
+                                borderColor: orderType === 'pickup' ? '#ea580c' : 'grey.300',
+                                boxShadow: 3
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                p: 2,
+                                borderRadius: '50%',
+                                bgcolor: orderType === 'pickup' ? '#ffedd5' : 'grey.100',
+                                color: orderType === 'pickup' ? '#c2410c' : 'grey.600'
+                            }}
+                        >
+                            <PickupIcon sx={{ fontSize: 40 }} />
+                        </Box>
+                        <Box>
+                            <Typography variant="h6" fontWeight="bold" color="text.primary">
+                                Retirada no Balcão
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Você busca no restaurante
+                            </Typography>
+                        </Box>
+                    </Paper>
+                </Grid>
+            </Grid>
 
-            <div className="flex justify-center">
-                <button
-                    onClick={handleContinue}
-                    disabled={!orderType}
-                    className={`px-8 py-3 rounded-lg font-bold text-white transition-colors w-full md:w-auto
-                        ${orderType ? 'bg-green-600 hover:bg-green-700 shadow-lg' : 'bg-gray-300 cursor-not-allowed'}
-                    `}
-                >
-                    Continuar para o Cardápio
-                </button>
-            </div>
-        </div>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Fade in={!!orderType}>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        onClick={handleContinue}
+                        disabled={!orderType}
+                        endIcon={<ArrowForward />}
+                        sx={{
+                            px: 6,
+                            py: 1.5,
+                            borderRadius: 3,
+                            fontSize: '1.1rem',
+                            fontWeight: 'bold',
+                            textTransform: 'none',
+                            bgcolor: '#16a34a',
+                            '&:hover': {
+                                bgcolor: '#15803d',
+                                transform: 'scale(1.02)'
+                            },
+                            transition: 'all 0.2s',
+                            boxShadow: 4
+                        }}
+                    >
+                        Continuar para o Cardápio
+                    </Button>
+                </Fade>
+            </Box>
+        </Box>
     );
 }
