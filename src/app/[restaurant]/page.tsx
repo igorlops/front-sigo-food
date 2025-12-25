@@ -32,7 +32,7 @@ export default async function RestaurantHome({ params }: { params: Promise<{ res
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
-                            href={`/${restaurant}/pedido`}
+                            href={`/pedido`}
                             style={{ backgroundColor: 'var(--color-primary, #dc2626)' }}
                             className="flex-1 group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 active:scale-95"
                         >
@@ -41,7 +41,7 @@ export default async function RestaurantHome({ params }: { params: Promise<{ res
                         </Link>
 
                         <Link
-                            href={`/${restaurant}/produtos`}
+                            href={`/produtos`}
                             style={{
                                 color: 'var(--color-primary, #dc2626)',
                                 borderColor: 'var(--color-primary, #dc2626)'

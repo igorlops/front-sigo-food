@@ -4,7 +4,6 @@ import React from 'react';
 import { useCart } from '@/context/CartContext';
 import { useOrder } from '@/context/OrderContext';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import {
     Box,
     Typography,
@@ -27,8 +26,6 @@ import {
 export default function CartView() {
     const { items, removeFromCart, updateQuantity, subtotal, total, clearCart } = useCart();
     const { orderType } = useOrder();
-    const pathname = usePathname();
-    const tenant = pathname.split('/')[1];
 
     if (items.length === 0) {
         return (
@@ -50,7 +47,7 @@ export default function CartView() {
                 <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
                     Adicione itens deliciosos para continuar.
                 </Typography>
-                <Link href={`/${tenant}/produtos`} style={{ textDecoration: 'none' }}>
+                <Link href={`/produtos`} style={{ textDecoration: 'none' }}>
                     <Button variant="contained" size="large" sx={{ borderRadius: 2 }}>
                         Ver Cardápio
                     </Button>
@@ -200,7 +197,7 @@ export default function CartView() {
                 </Button>
 
                 <Box sx={{ mt: 3, textAlign: 'center' }}>
-                    <Link href={`/${tenant}/produtos`} style={{ textDecoration: 'none' }}>
+                    <Link href={`produtos`} style={{ textDecoration: 'none' }}>
                         <Typography
                             variant="body2"
                             color="primary"

@@ -23,15 +23,13 @@ import {
 
 export default function ClientHeader({ restaurantName }: { restaurantName: string }) {
     const { items, total } = useCart();
-    const pathname = usePathname();
-    const tenant = pathname.split('/')[1];
     const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
     return (
         <AppBar position="fixed" color="inherit" elevation={1} sx={{ bgcolor: 'white' }}>
             <Container maxWidth="lg">
                 <Toolbar disableGutters sx={{ justifyContent: 'space-between', height: 64 }}>
-                    <Link href={`/${tenant}`} style={{ textDecoration: 'none' }}>
+                    <Link href={`/`} style={{ textDecoration: 'none' }}>
                         <Typography
                             variant="h6"
                             component="div"

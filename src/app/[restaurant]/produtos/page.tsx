@@ -1,11 +1,14 @@
+
+
 import { getCardapio } from '@/app/data/service/CardapioService';
 import ProductCard from '@/app/ui/components/client/ProductCard';
 
 export default async function ProdutosPage({ params }: { params: Promise<{ restaurant: string }> }) {
     const { restaurant } = await params;
+    console.log('restaurant: ' + restaurant);
     const cardapio = await getCardapio(restaurant);
-
-    if (!cardapio || cardapio.length === 0) {
+    console.log('cardapio: ' + cardapio);
+    if (!cardapio || cardapio.data.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-20 text-gray-500">
                 <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,7 +26,7 @@ export default async function ProdutosPage({ params }: { params: Promise<{ resta
                 <p className="text-blue-700">Escolha seus produtos e adicione ao carrinho.</p>
             </div>
 
-            {cardapio.map((categoria) => (
+            {cardapio.data.map((categoria) => (
                 <section key={categoria.id} id={`cat-${categoria.id}`} className="scroll-mt-24">
                     <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                         <span className="w-2 h-6 bg-blue-600 rounded-full"></span>
