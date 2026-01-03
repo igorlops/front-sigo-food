@@ -180,24 +180,29 @@ export default function CartView() {
                     </Typography>
                 </Box>
 
-                <Button
-                    variant="contained"
-                    fullWidth
-                    size="large"
-                    endIcon={<ArrowForwardIcon />}
-                    sx={{
-                        py: 1.5,
-                        fontWeight: 'bold',
-                        fontSize: '1rem',
-                        bgcolor: 'success.main',
-                        '&:hover': { bgcolor: 'success.dark' }
-                    }}
-                >
-                    Finalizar Pedido
-                </Button>
+                <Link href="/checkout" style={{ textDecoration: 'none', width: '100%' }}>
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        endIcon={<ArrowForwardIcon />}
+                        sx={{
+                            py: 2,
+                            borderRadius: 3,
+                            fontWeight: 'bold',
+                            fontSize: '1.1rem',
+                            textTransform: 'none',
+                            boxShadow: 4,
+                            bgcolor: 'primary.main',
+                            '&:hover': { bgcolor: 'primary.dark' }
+                        }}
+                    >
+                        Finalizar Pedido
+                    </Button>
+                </Link>
 
                 <Box sx={{ mt: 3, textAlign: 'center' }}>
-                    <Link href={`produtos`} style={{ textDecoration: 'none' }}>
+                    <Link href="/produtos" style={{ textDecoration: 'none' }}>
                         <Typography
                             variant="body2"
                             color="primary"

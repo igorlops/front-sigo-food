@@ -1,14 +1,12 @@
-
-
 import { getCardapio } from '@/app/data/service/CardapioService';
 import ProductCard from '@/app/ui/components/client/ProductCard';
+import CategoryNav from '@/app/ui/components/client/CategoryNav';
 
 export default async function ProdutosPage({ params }: { params: Promise<{ restaurant: string }> }) {
     const { restaurant } = await params;
-    console.log('restaurant: ' + restaurant);
     const cardapio = await getCardapio(restaurant);
-    console.log('cardapio: ' + cardapio);
-    if (!cardapio || cardapio.data.length === 0) {
+
+    if (!cardapio || !cardapio.data || cardapio.data.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-20 text-gray-500">
                 <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -20,25 +18,36 @@ export default async function ProdutosPage({ params }: { params: Promise<{ resta
     }
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-6 space-y-10 pb-12">
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6">
-                <h1 className="text-2xl font-bold text-blue-900">Cardápio</h1>
-                <p className="text-blue-700">Escolha seus produtos e adicione ao carrinho.</p>
-            </div>
+        <div className="relative">
+            <CategoryNav categories={cardapio.data} />
 
-            {cardapio.data.map((categoria) => (
-                <section key={categoria.id} id={`cat-${categoria.id}`} className="scroll-mt-24">
-                    <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <span className="w-2 h-6 bg-blue-600 rounded-full"></span>
-                        {categoria.name}
-                    </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {categoria.products.map((produto) => (
-                            <ProductCard key={produto.id} product={produto} />
-                        ))}
-                    </div>
-                </section>
-            ))}
+            <div className="max-w-4xl mx-auto px-4 py-8 space-y-12 pb-24">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 mb-8 shadow-sm">
+                    <h1 className="text-3xl font-extrabold text-blue-900 mb-2">Cardápio</h1>
+                    <p className="text-blue-700">Escolha seus favoritos e monte seu pedido ideal.</p>
+                </div>
+
+                {cardapio.data.map((categoria) => (
+                    <section
+                        key={categoria.id}
+                        id={`cat-${categoria.id}`}
+                        className="scroll-mt-32"
+                    >
+                        <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                            <span className="w-2 h-8 bg-blue-600 rounded-full shadow-sm"></span>
+                            {categoria.name}
+                            <span className="text-sm font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded-md ml-2">
+                                {categoria.products.length} itens
+                            </span>
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {categoria.products.map((produto) => (
+                                <ProductCard key={produto.id} product={produto} />
+                            ))}
+                        </div>
+                    </section>
+                ))}
+            </div>
         </div>
     );
 }

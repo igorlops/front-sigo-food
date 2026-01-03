@@ -36,7 +36,7 @@ interface responseDataDelete {
     data: {
         data: null,
         error: boolean,
-        message:string
+        message: string
     }
 }
 export interface Cliente {
@@ -66,10 +66,10 @@ export async function buscaClientes(): Promise<responseDataPagination | null> {
     }
 }
 
-export async function adicionaCliente(formData:FormData): Promise<{ data: DataCliente} | null> {
+export async function adicionaCliente(formData: FormData): Promise<{ data: DataCliente } | null> {
     try {
         const response = await ApiService;
-        return response.post('/clients',formData);
+        return response.post('/clients', formData);
 
     } catch (error) {
         console.error('Erro ao adicionar cliente:', error);
@@ -77,33 +77,54 @@ export async function adicionaCliente(formData:FormData): Promise<{ data: DataCl
     }
 }
 
-export async function buscaCliente(client_id:number): Promise<responseData | null> {
+export async function buscaCliente(client_id: number): Promise<responseData | null> {
     try {
         const response = await ApiService;
-        return response.get('/clients/'+client_id);
+        return response.get('/clients/' + client_id);
     } catch (error) {
         console.error('Erro ao buscar cliente:', error);
         return null;
     }
 }
 
-export async function atualizaCliente(client_id:number,formData:FormData): Promise<responseData | null> {
+export async function atualizaCliente(client_id: number, formData: FormData): Promise<responseData | null> {
     try {
         const response = await ApiService;
-        return response.put('/clients/'+client_id,formData);
+        return response.put('/clients/' + client_id, formData);
 
     } catch (error) {
         console.error('Erro ao atualizar cliente: ', error);
         return null;
     }
 }
-export async function deletaCliente(client_id:number): Promise<responseDataDelete | null> {
+export async function deletaCliente(client_id: number): Promise<responseDataDelete | null> {
     try {
         const response = await ApiService;
-        return response.delete('/clients/'+client_id);
+        return response.delete('/clients/' + client_id);
 
     } catch (error) {
         console.error('Erro ao deletar cliente: ', error);
+        return null;
+    }
+}
+export async function identificaCliente(identifier: string, restaurant_id: string): Promise<{ client_id: number, masked_email?: string, message?: string } | null> {
+    try {
+        const response = await ApiService;
+        const res = await response.post('/clients/identify', { identifier, restaurant_id });
+        return res.data;
+    } catch (error) {
+        console.error('Erro ao identificar cliente:', error);
+        return null;
+    }
+}
+
+export async function verificaOtpCliente(client_id: number, restaurant_id: string, otp: string): Promise<{ data: Cliente } | null> {
+    try {
+        const response = await ApiService;
+        const res = await response.post('/clients/verify-otp', { client_id, restaurant_id, otp });
+        return res.data;
+    } catch (error) {
+        console.error('Erro ao verificar OTP:', error);
         return null;
     }
 }

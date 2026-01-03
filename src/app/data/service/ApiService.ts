@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie'
 
 export const WebService = axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: process.env.NEXT_PUBLIC_API_URL + '',
     withCredentials: true,
     headers: {
         'Accept': 'application/json',
@@ -11,7 +11,7 @@ export const WebService = axios.create({
     },
 });
 export const ApiService = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: process.env.NEXT_PUBLIC_API_URL + '/api',
     withCredentials: true,
     headers: {
         'Accept': 'application/json',

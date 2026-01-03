@@ -17,8 +17,9 @@ import {
 import {
     ShoppingCart as ShoppingCartIcon,
     Person as PersonIcon,
-    RestaurantMenu as MenuIcon,
-    Receipt as OrderIcon
+    RestaurantMenu as RestaurantMenuIcon,
+    Receipt as OrderIcon,
+    History as HistoryIcon
 } from '@mui/icons-material';
 
 export default function ClientHeader({ restaurantName }: { restaurantName: string }) {
@@ -26,46 +27,40 @@ export default function ClientHeader({ restaurantName }: { restaurantName: strin
     const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
     return (
-        <AppBar position="fixed" color="inherit" elevation={1} sx={{ bgcolor: 'white' }}>
+        <AppBar position="fixed" color="inherit" elevation={1} sx={{ bgcolor: 'white', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
             <Container maxWidth="lg">
                 <Toolbar disableGutters sx={{ justifyContent: 'space-between', height: 64 }}>
-                    <Link href={`/`} style={{ textDecoration: 'none' }}>
+                    <Link href="/" style={{ textDecoration: 'none' }}>
                         <Typography
                             variant="h6"
                             component="div"
                             sx={{
                                 fontWeight: 'bold',
                                 color: 'primary.main',
-                                '&:hover': { opacity: 0.8 }
+                                '&:hover': { opacity: 0.8 },
+                                fontSize: { xs: '1.1rem', sm: '1.25rem' }
                             }}
                         >
                             {restaurantName}
                         </Typography>
                     </Link>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Link href={`/pedido`} style={{ textDecoration: 'none' }}>
-                            <Button
-                                color="inherit"
-                                startIcon={<OrderIcon />}
-                                sx={{ display: { xs: 'none', sm: 'flex' } }}
-                            >
-                                Pedidos
-                            </Button>
+                    {/* Desktop Navigation */}
+                    <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
+                        <Link href="/produtos" style={{ textDecoration: 'none' }}>
+                            <Button color="inherit" startIcon={<RestaurantMenuIcon />}>Cardápio</Button>
                         </Link>
 
-                        <Link href={`/perfil`} style={{ textDecoration: 'none' }}>
-                            <IconButton title="Meu Perfil" color="inherit">
-                                <PersonIcon />
-                            </IconButton>
+                        <Link href="/pedidos" style={{ textDecoration: 'none' }}>
+                            <Button color="inherit" startIcon={<HistoryIcon />}>Meus Pedidos</Button>
                         </Link>
 
-                        <Link href={`/carrinho`} style={{ textDecoration: 'none' }}>
+                        <Link href="/carrinho" style={{ textDecoration: 'none' }}>
                             <Box
                                 sx={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: 2,
+                                    gap: 1.5,
                                     bgcolor: 'primary.main',
                                     color: 'primary.contrastText',
                                     borderRadius: 2,
@@ -73,21 +68,28 @@ export default function ClientHeader({ restaurantName }: { restaurantName: strin
                                     py: 1,
                                     cursor: 'pointer',
                                     '&:hover': { bgcolor: 'primary.dark' },
-                                    transition: 'background-color 0.2s',
-                                    ml: 1
+                                    transition: 'all 0.2s',
+                                    fontWeight: 'bold'
                                 }}
                             >
                                 <Badge badgeContent={itemCount} color="error" showZero={false}>
-                                    <ShoppingCartIcon fontSize="small" color="inherit" />
+                                    <ShoppingCartIcon fontSize="small" />
                                 </Badge>
-                                <Typography
-                                    variant="subtitle2"
-                                    fontWeight="bold"
-                                    sx={{ display: { xs: 'none', sm: 'block' } }}
-                                >
-                                    R$ {total.toFixed(2)}
+                                <Typography variant="subtitle2" fontWeight="bold">
+                                    Carrinho (R$ {total.toFixed(2)})
                                 </Typography>
                             </Box>
+                        </Link>
+                    </Box>
+
+                    {/* Mobile/Tablet Simplified View (Only Cart Icon if needed, or nothing if using BottomNav) */}
+                    <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
+                        <Link href="/checkout" style={{ textDecoration: 'none' }}>
+                            <IconButton color="primary">
+                                <Badge badgeContent={itemCount} color="error">
+                                    <ShoppingCartIcon />
+                                </Badge>
+                            </IconButton>
                         </Link>
                     </Box>
                 </Toolbar>

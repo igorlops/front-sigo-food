@@ -27,7 +27,7 @@ interface CardapioApiResponse {
     data: CategoriaCardapio[];
     message: string;
 }
-const API_URL = 'http://localhost:8000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL + '/api';
 
 export async function getCardapio(slug: string): Promise<CardapioApiResponse | null> {
     try {

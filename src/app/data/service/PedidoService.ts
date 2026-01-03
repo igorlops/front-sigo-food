@@ -78,7 +78,7 @@ export async function buscaPedidos(current_page: number): Promise<responseDataPa
     }
 }
 
-export async function adicionaPedido(data: FormData): Promise<responseData | null> {
+export async function adicionaPedido(data: FormData | any): Promise<responseData | null> {
     try {
         const response = await ApiService;
         console.log(data)
@@ -121,3 +121,13 @@ export async function deletaPedido(order_id: number): Promise<responseDataDelete
     }
 }
 
+
+export async function buscaPedidosPorEmail(email: string): Promise<responseData | null> {
+    try {
+        const response = await ApiService;
+        return response.get(`/orders/history?email=${email}`);
+    } catch (error) {
+        console.error('Erro ao buscar histórico de pedidos:', error);
+        return null;
+    }
+}
