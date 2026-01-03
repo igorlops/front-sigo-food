@@ -377,7 +377,7 @@ export default function CheckoutForm() {
                         </Box>
 
                         <FormControl component="fieldset">
-                            <FormLabel component="legend" sx={{ fontWeight: 'bold', mb: 1 }}>Forma de Pagamento (na entrega)</FormLabel>
+                            <FormLabel component="legend" sx={{ fontWeight: 'bold', mb: 1 }}>Forma de Pagamento {orderType ? (orderType === 'delivery' ? '(na entrega)' : '(na retirada)') : '(tipo de entrega não selecionado)'}</FormLabel>
                             <RadioGroup
                                 name="payment_method"
                                 value={formData.payment_method}
