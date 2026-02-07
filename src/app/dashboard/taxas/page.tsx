@@ -8,28 +8,29 @@ import TaxaPedidoForm from '@/app/ui/components/Modules/TaxaPedido/Form/TaxaPedi
 import ButtonCreateNew from '@/app/ui/components/itens/ButtonCreateNew';
 import ModalComponent from '@/app/ui/components/itens/ModalComponent';
 import { Close, AttachMoney } from '@mui/icons-material';
-import { buscaTaxasPedido, deletaTaxaPedido } from '@/app/data/service/TaxaPedidoService';
+import { buscaTaxasPaginadas, deletaTaxa, TaxasPaginadas } from '@/app/data/service/TaxaPedidoService';
 
 export default function TaxasPage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [taxaId, setTaxaId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-  const [taxas, setTaxas] = useState<any[]>([]);
+  const [taxas, setTaxas] = useState<TaxasPaginadas>([]);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchTaxas = async () => {
+  const fetchTaxas = async (page: number = 1) => {
     setLoading(true);
-    const response = await buscaTaxasPedido();
-    if (response && response.data) {
-      setTaxas(response.data.data);
+    const response = await buscaTaxasPaginadas(page);
+    if (response && response) {
+      setTaxas(response);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchTaxas();
-  }, []);
+    fetchTaxas(currentPage);
+  }, [currentPage]);
 
   const handleEditar = (id: number) => {
     setTaxaId(id);
@@ -38,13 +39,17 @@ export default function TaxasPage() {
 
   const handleExcluir = async (id: number) => {
     if (confirm('Deseja excluir esta taxa?')) {
-      const resp = await deletaTaxaPedido(id);
+      const resp = await deletaTaxa(id);
       if (resp) {
         setAlertMessage('Taxa excluída com sucesso!');
         setOpenAlert(true);
-        fetchTaxas();
+        fetchTaxas(currentPage);
       }
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -84,6 +89,7 @@ export default function TaxasPage() {
           loading={loading}
           handleEditar={handleEditar}
           handleExcluir={handleExcluir}
+          handlePageChange={handlePageChange}
         />
       </Paper>
 
@@ -94,7 +100,7 @@ export default function TaxasPage() {
           <TaxaPedidoForm
             onSuccess={() => {
               setModalVisible(false);
-              fetchTaxas();
+              fetchTaxas(currentPage);
             }}
             taxa_id={taxaId}
           />

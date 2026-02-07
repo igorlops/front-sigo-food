@@ -8,28 +8,30 @@ import IngredienteForm from '@/app/ui/components/Modules/Ingrediente/Form/Ingred
 import ButtonCreateNew from '@/app/ui/components/itens/ButtonCreateNew';
 import ModalComponent from '@/app/ui/components/itens/ModalComponent';
 import { Close, Kitchen } from '@mui/icons-material';
-import { buscaIngredientes, deletaIngrediente } from '@/app/data/service/IngredienteService';
+import { buscaIngredientesPaginados, deletaIngrediente, IngredientesPaginados } from '@/app/data/service/IngredienteService';
 
 export default function IngredientesPage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [ingredienteId, setIngredienteId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-  const [ingredientes, setIngredientes] = useState<any[]>([]);
+  const [ingredientes, setIngredientes] = useState<IngredientesPaginados>([]);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchIngredientes = async () => {
+  const fetchIngredientes = async (page: number = 1) => {
     setLoading(true);
-    const response = await buscaIngredientes();
-    if (response && response.data) {
-      setIngredientes(response.data.data);
+    const response = await buscaIngredientesPaginados(page);
+    if (response && response) {
+      setIngredientes(response);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchIngredientes();
-  }, []);
+    fetchIngredientes(currentPage);
+    console.log(ingredientes);
+  }, [currentPage]);
 
   const handleEditar = (id: number) => {
     setIngredienteId(id);
@@ -42,9 +44,13 @@ export default function IngredientesPage() {
       if (resp) {
         setAlertMessage('Ingrediente excluído com sucesso!');
         setOpenAlert(true);
-        fetchIngredientes();
+        fetchIngredientes(currentPage);
       }
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -84,6 +90,7 @@ export default function IngredientesPage() {
           loading={loading}
           handleEditar={handleEditar}
           handleExcluir={handleExcluir}
+          handlePageChange={handlePageChange}
         />
       </Paper>
 
@@ -94,7 +101,7 @@ export default function IngredientesPage() {
           <IngredienteForm
             onSuccess={() => {
               setModalVisible(false);
-              fetchIngredientes();
+              fetchIngredientes(currentPage);
             }}
             ingrediente_id={ingredienteId}
           />

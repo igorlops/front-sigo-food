@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { adicionaCategoria, atualizaCategoria, buscaCategoria } from '@/app/data/service/CategoriaService';
+import { adicionaCategoria, atualizaCategoria } from '@/app/data/service/CategoriaService';
+import { useCategoria } from '@/app/data/hooks/useCategorias';
 import { Typography, Box, TextField, Button, Stack } from '@mui/material';
 import { UserLocalStorage } from '@/app/data/utils/const/User';
 
@@ -17,26 +18,16 @@ export default function FormCategorias({ onSuccess, categoria_id }: FormCategori
   const userLocalStorage = UserLocalStorage();
   const restaurant_id = userLocalStorage?.restaurant_id;
 
-  useEffect(() => {
-    if (categoria_id != null) {
-      fetchCategoriaId(categoria_id);
-    }
-  }, [categoria_id]);
+  // Usando o hook customizado para buscar categoria ao editar
+  const { data: categoria } = useCategoria(categoria_id);
 
-  const fetchCategoriaId = async (categoria_id: number) => {
-    try {
-      const response = await buscaCategoria(categoria_id);
-      if (response?.data.data && response.data.data.length > 0) {
-        const categoria = response.data.data[0];
-        if (categoria != null) {
-          setName(categoria.name);
-        }
-      }
-    } catch (err) {
-      console.error('Erro ao buscar categoria:', err);
-      setError('Erro ao buscar categoria');
+  useEffect(() => {
+    if (categoria) {
+      setName(categoria.name);
+    } else if (categoria_id === null) {
+      setName('');
     }
-  };
+  }, [categoria, categoria_id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,7 +47,7 @@ export default function FormCategorias({ onSuccess, categoria_id }: FormCategori
         ? await atualizaCategoria(categoria_id, formData)
         : await adicionaCategoria(name, restaurant_id);
 
-      if (!response?.data.error) {
+      if (!response.error) {
         setName('');
         onSuccess();
       }

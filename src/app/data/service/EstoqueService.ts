@@ -1,45 +1,7 @@
 'use client'
 import { ApiService } from "./ApiService";
 
-interface responseDataPagination {
-    data: DataEstoquePagination;
-}
-// Define a estrutura do retorno do serviço
-interface DataEstoquePagination {
-    data: EstoquesPaginados;
-    message: string;
-    error: boolean;
-}
-export interface EstoquesPaginados {
-    data: Array<Estoque>;
-    current_page: number;
-    first_page_url: string,
-    from: number,
-    last_page: number,
-    last_page_url: string,
-    links: Array<{
-        url: string | null,
-        label: string,
-        active: boolean
-    }>
-    next_page_url: string | null,
-    path: string,
-    per_page: number,
-    prev_page_url: string | null,
-    to: number,
-    total: number
-}
-
-interface responseData {
-    data: DataEstoque;
-}
-interface responseDataDelete {
-    data: {
-        data: null,
-        error: boolean,
-        message: string
-    }
-}
+// Tipos exportados
 export interface Estoque {
     id: number;
     product_id: number;
@@ -50,19 +12,6 @@ export interface Estoque {
     updated_at: Date;
 }
 
-// Define a estrutura do retorno do serviço
-interface DataEstoque {
-    data: Array<Estoque>; // Agora sabemos que o array contém objetos do tipo Estoque
-    message: string;
-    error: boolean;
-}
-export interface dataResponseShowEstoque {
-    data: {
-        data: Array<ShowEstoque>
-    };
-    error: boolean;
-    message: string;
-}
 export interface ShowEstoque {
     product_id: number;
     product_name: string;
@@ -73,64 +22,65 @@ export interface ShowEstoque {
     updated_at: Date;
 }
 
-
-export async function buscaEstoques(): Promise<dataResponseShowEstoque | null> {
-    try {
-        const response = await ApiService;
-        return response.get('/stocks');
-    } catch (error) {
-        console.error('Erro ao buscar estoque:', error);
-        return null;
-    }
+export interface EstoquesPaginados {
+    data: Array<Estoque>;
+    current_page: number;
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: Array<{
+        url: string | null;
+        label: string;
+        active: boolean;
+    }>;
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
 }
 
-export async function adicionaEstoque(product_id: number | null, quantity: number | null, type: string | null, observation: string | null): Promise<{ data: DataEstoque } | null> {
-    try {
-        const response = await ApiService;
-        return response.post('/stocks', JSON.stringify({ product_id, quantity, type, observation }));
-
-    } catch (error) {
-        console.error('Erro ao adicionar estoque:', error);
-        return null;
-    }
+export interface EstoqueResponse {
+    data: Estoque[];
+    message: string;
+    error: boolean;
 }
 
-export async function buscaEstoque(stock_id: number): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.get('/stocks/' + stock_id);
-    } catch (error) {
-        console.error('Erro ao buscar estoque:', error);
-        return null;
-    }
-}
-export async function buscaEstoquePorProduto(product_id: number | null): Promise<responseDataPagination | null> {
-    try {
-        const response = await ApiService;
-        return response.get('/stocks/product/' + product_id);
-    } catch (error) {
-        console.error('Erro ao buscar estoque:', error);
-        return null;
-    }
+export interface DeleteResponse {
+    data: null;
+    error: boolean;
+    message: string;
 }
 
-export async function atualizaEstoque(stock_id: number, formData: FormData): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.put('/stocks/' + stock_id, formData);
-
-    } catch (error) {
-        console.error('Erro ao atualizar estoque: ', error);
-        return null;
-    }
+// Services - retornam apenas dados tratados
+export async function buscaEstoques(): Promise<ShowEstoque[]> {
+    const { data } = await ApiService.get('/stocks');
+    return data.data;
 }
-export async function deletaEstoque(stock_id: number): Promise<responseDataDelete | null> {
-    try {
-        const response = await ApiService;
-        return response.delete('/stocks/' + stock_id);
 
-    } catch (error) {
-        console.error('Erro ao deletar estoque: ', error);
-        return null;
-    }
+export async function adicionaEstoque(product_id: number | null, quantity: number | null, type: string | null, observation: string | null): Promise<EstoqueResponse> {
+    const { data } = await ApiService.post('/stocks', JSON.stringify({ product_id, quantity, type, observation }));
+    return data;
+}
+
+export async function buscaEstoque(stock_id: number): Promise<Estoque> {
+    const { data } = await ApiService.get(`/stocks/${stock_id}`);
+    return data.data[0];
+}
+
+export async function buscaEstoquePorProduto(product_id: number | null): Promise<EstoquesPaginados> {
+    const { data } = await ApiService.get(`/stocks/product/${product_id}`);
+    return data.data;
+}
+
+export async function atualizaEstoque(stock_id: number, formData: FormData): Promise<EstoqueResponse> {
+    const { data } = await ApiService.put(`/stocks/${stock_id}`, formData);
+    return data;
+}
+
+export async function deletaEstoque(stock_id: number): Promise<DeleteResponse> {
+    const { data } = await ApiService.delete(`/stocks/${stock_id}`);
+    return data.data;
 }

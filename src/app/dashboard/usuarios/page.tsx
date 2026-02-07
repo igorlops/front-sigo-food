@@ -45,8 +45,8 @@ export default function UsuariosPage() {
     try {
       setLoading(true)
       const response = await buscaUsuarios(currentPage);
-      if (response && response?.data.data) {
-        setUsuarios(response.data.data);
+      if (response && response) {
+        setUsuarios(response);
         setModalVisible(false)
       }
       setLoading(false)
@@ -60,8 +60,9 @@ export default function UsuariosPage() {
     try {
       setLoading(true)
       const response = await deletaUsuario(usuario_id);
-      if (response && response?.data.data) {
-        setMensagemDeletado(response.data.message);
+      if (response && response) {
+        setMensagemDeletado(response.message);
+        fetchUsuarios();
       }
       setLoading(false)
     } catch (e) {

@@ -1,44 +1,7 @@
 'use client'
 import { ApiService } from "./ApiService";
 
-interface responseDataPagination {
-    data: DataPedidoPagination;
-}
-// Define a estrutura do retorno do serviço
-interface DataPedidoPagination {
-    data: PedidosPaginados;
-    message: string;
-    error: boolean;
-}
-export interface PedidosPaginados {
-    data: Array<Pedido>;
-    current_page: number;
-    first_page_url: string,
-    from: number,
-    last_page: number,
-    last_page_url: string,
-    links: Array<{
-        url: string | null,
-        label: string,
-        active: boolean
-    }>
-    next_page_url: string | null,
-    path: string,
-    per_page: number,
-    prev_page_url: string | null,
-    to: number,
-    total: number
-}
-interface responseData {
-    data: DataPedido;
-}
-interface responseDataDelete {
-    data: {
-        data: null,
-        error: boolean,
-        message: string
-    }
-}
+// Tipos exportados
 export interface Pedido {
     id: number;
     restaurant_id: number;
@@ -61,73 +24,65 @@ export interface Pedido {
     updated_at: Date;
 }
 
-// Define a estrutura do retorno do serviço
-interface DataPedido {
-    data: Array<Pedido>; // Agora sabemos que o array contém objetos do tipo Pedido
+export interface PedidosPaginados {
+    data: Array<Pedido>;
+    current_page: number;
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: Array<{
+        url: string | null;
+        label: string;
+        active: boolean;
+    }>;
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+}
+
+export interface PedidoResponse {
+    data: Pedido[];
     message: string;
     error: boolean;
 }
 
-export async function buscaPedidos(current_page: number): Promise<responseDataPagination | null> {
-    try {
-        const response = await ApiService;
-        return response.get('/orders?page=' + current_page);
-    } catch (error) {
-        console.error('Erro ao buscar pedidos:', error);
-        return null;
-    }
+export interface DeleteResponse {
+    data: null;
+    error: boolean;
+    message: string;
 }
 
-export async function adicionaPedido(data: FormData | any): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        console.log(data)
-        return response.post('/orders', data);
-
-    } catch (error) {
-        console.error('Erro ao adicionar pedido: ', error);
-        return null;
-    }
+// Services - retornam apenas dados tratados
+export async function buscaPedidos(current_page: number): Promise<PedidosPaginados> {
+    const { data } = await ApiService.get(`/orders?page=${current_page}`);
+    return data.data;
 }
 
-export async function buscaPedido(order_id: number): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.get('/orders/' + order_id);
-    } catch (error) {
-        console.error('Erro ao buscar pedido:', error);
-        return null;
-    }
+export async function adicionaPedido(pedidoData: FormData | any): Promise<PedidoResponse> {
+    const { data } = await ApiService.post('/orders', pedidoData);
+    return data;
 }
 
-export async function atualizaPedido(order_id: number, formData: FormData): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.put('/orders/' + order_id, formData);
-
-    } catch (error) {
-        console.error('Erro ao atualizar pedido: ', error);
-        return null;
-    }
-}
-export async function deletaPedido(order_id: number): Promise<responseDataDelete | null> {
-    try {
-        const response = await ApiService;
-        return response.delete('/orders/' + order_id);
-
-    } catch (error) {
-        console.error('Erro ao deletar pedido: ', error);
-        return null;
-    }
+export async function buscaPedido(order_id: number): Promise<Pedido> {
+    const { data } = await ApiService.get(`/orders/${order_id}`);
+    return data.data[0];
 }
 
+export async function atualizaPedido(order_id: number, formData: FormData): Promise<PedidoResponse> {
+    const { data } = await ApiService.put(`/orders/${order_id}`, formData);
+    return data;
+}
 
-export async function buscaPedidosPorEmail(email: string): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.get(`/orders/history?email=${email}`);
-    } catch (error) {
-        console.error('Erro ao buscar histórico de pedidos:', error);
-        return null;
-    }
+export async function deletaPedido(order_id: number): Promise<DeleteResponse> {
+    const { data } = await ApiService.delete(`/orders/${order_id}`);
+    return data.data;
+}
+
+export async function buscaPedidosPorEmail(email: string): Promise<Pedido[]> {
+    const { data } = await ApiService.get(`/orders/history?email=${email}`);
+    return data.data;
 }

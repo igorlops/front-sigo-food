@@ -2,45 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import {
-    buscaCategorias,
-    buscaCategoriasPaginadas,
-    buscaCategoria,
-    Categoria,
-    CategoriasPaginadas
-} from '../service/CategoriaService';
+    buscaPedidos,
+    buscaPedido,
+    buscaPedidosPorEmail,
+    Pedido,
+    PedidosPaginados
+} from '../service/PedidoService';
 
 /**
- * Hook para buscar todas as categorias
- */
-export function useCategorias() {
-    const [data, setData] = useState<Categoria[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        async function fetch() {
-            try {
-                setLoading(true);
-                const result = await buscaCategorias();
-                setData(result);
-            } catch {
-                setError('Erro ao buscar categorias');
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetch();
-    }, []);
-
-    return { data, loading, error };
-}
-
-/**
- * Hook para buscar categorias paginadas
+ * Hook para buscar pedidos paginados
  * @param page - Número da página atual
  */
-export function useCategoriasPaginadas(page: number = 1) {
-    const [data, setData] = useState<CategoriasPaginadas | null>(null);
+export function usePedidos(page: number = 1) {
+    const [data, setData] = useState<PedidosPaginados | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -48,10 +22,10 @@ export function useCategoriasPaginadas(page: number = 1) {
         async function fetch() {
             try {
                 setLoading(true);
-                const result = await buscaCategoriasPaginadas(page);
+                const result = await buscaPedidos(page);
                 setData(result);
             } catch {
-                setError('Erro ao buscar categorias');
+                setError('Erro ao buscar pedidos');
             } finally {
                 setLoading(false);
             }
@@ -63,30 +37,59 @@ export function useCategoriasPaginadas(page: number = 1) {
 }
 
 /**
- * Hook para buscar uma categoria específica
- * @param categoriaId - ID da categoria (null para não buscar)
+ * Hook para buscar um pedido específico
+ * @param pedidoId - ID do pedido (null para não buscar)
  */
-export function useCategoria(categoriaId: number | null) {
-    const [data, setData] = useState<Categoria | null>(null);
+export function usePedido(pedidoId: number | null) {
+    const [data, setData] = useState<Pedido | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!categoriaId) return;
+        if (!pedidoId) return;
 
         async function fetch() {
             try {
                 setLoading(true);
-                const result = await buscaCategoria(categoriaId);
+                const result = await buscaPedido(pedidoId!);
                 setData(result);
             } catch {
-                setError('Erro ao buscar categoria');
+                setError('Erro ao buscar pedido');
             } finally {
                 setLoading(false);
             }
         }
         fetch();
-    }, [categoriaId]);
+    }, [pedidoId]);
+
+    return { data, loading, error };
+}
+
+/**
+ * Hook para buscar pedidos por email
+ * @param email - Email do cliente (null para não buscar)
+ */
+export function usePedidosPorEmail(email: string | null) {
+    const [data, setData] = useState<Pedido[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!email) return;
+
+        async function fetch() {
+            try {
+                setLoading(true);
+                const result = await buscaPedidosPorEmail(email);
+                setData(result);
+            } catch {
+                setError('Erro ao buscar histórico de pedidos');
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetch();
+    }, [email]);
 
     return { data, loading, error };
 }

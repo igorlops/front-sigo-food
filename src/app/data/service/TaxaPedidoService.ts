@@ -1,28 +1,9 @@
 'use client'
 import { ApiService } from "./ApiService";
-import {
-    OrderFee,
-    OrderFeesListResponse,
-    OrderFeesPaginatedResponse,
-    OrderFeeShowResponse,
-    OrderFeeCreateResponse,
-    OrderFeeUpdateResponse,
-    OrderFeeDeleteResponse
-} from '../../../../api-types';
+import { OrderFee } from '../../../../api-types';
 
-// Re-export OrderFee type for use in components
+// Re-export OrderFee type
 export type { OrderFee };
-
-// Interfaces de resposta para paginação
-interface responseDataPagination {
-    data: DataTaxaPagination;
-}
-
-interface DataTaxaPagination {
-    data: TaxasPaginadas;
-    message: string;
-    error: boolean;
-}
 
 export interface TaxasPaginadas {
     data: Array<OrderFee>;
@@ -44,106 +25,45 @@ export interface TaxasPaginadas {
     total: number;
 }
 
-// Interface de resposta padrão
-interface responseData {
-    data: DataTaxa;
-}
-
-interface DataTaxa {
-    data: Array<OrderFee>;
+export interface TaxaResponse {
+    data: OrderFee[];
     message: string;
     error: boolean;
 }
 
-// Interface de resposta para delete
-interface responseDataDelete {
-    data: {
-        data: null;
-        error: boolean;
-        message: string;
-    }
+export interface DeleteResponse {
+    data: null;
+    error: boolean;
+    message: string;
 }
 
-/**
- * Busca todas as taxas de pedido (sem paginação)
- */
-export async function buscaTaxas(): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.get('/fees');
-    } catch (error) {
-        console.error('Erro ao buscar taxas:', error);
-        return null;
-    }
+// Services - retornam apenas dados tratados
+export async function buscaTaxas(): Promise<OrderFee[]> {
+    const { data } = await ApiService.get('/fees');
+    return data.data;
 }
 
-/**
- * Busca taxas com paginação
- * @param page - Número da página (padrão: 1)
- */
-export async function buscaTaxasPaginadas(page: number = 1): Promise<responseDataPagination | null> {
-    try {
-        const response = await ApiService;
-        return response.get(`/fees?paginated=S&page=${page}`);
-    } catch (error) {
-        console.error('Erro ao buscar taxas paginadas:', error);
-        return null;
-    }
+export async function buscaTaxasPaginadas(page: number = 1): Promise<TaxasPaginadas> {
+    const { data } = await ApiService.get(`/fees?paginated=S&page=${page}`);
+    return data.data;
 }
 
-/**
- * Busca uma taxa específica por ID
- * @param fee_id - ID da taxa
- */
-export async function buscaTaxa(fee_id: number): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.get(`/fees/${fee_id}`);
-    } catch (error) {
-        console.error('Erro ao buscar taxa:', error);
-        return null;
-    }
+export async function buscaTaxa(fee_id: number): Promise<OrderFee> {
+    const { data } = await ApiService.get(`/fees/${fee_id}`);
+    return data.data[0];
 }
 
-/**
- * Adiciona uma nova taxa de pedido
- * @param formData - Dados da taxa (type, desc, unit_price)
- */
-export async function adicionaTaxa(formData: FormData): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.post('/fees', formData);
-    } catch (error) {
-        console.error('Erro ao adicionar taxa:', error);
-        return null;
-    }
+export async function adicionaTaxa(formData: FormData): Promise<TaxaResponse> {
+    const { data } = await ApiService.post('/fees', formData);
+    return data;
 }
 
-/**
- * Atualiza uma taxa existente
- * @param fee_id - ID da taxa
- * @param formData - Dados atualizados da taxa
- */
-export async function atualizaTaxa(fee_id: number, formData: FormData): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.put(`/fees/${fee_id}`, formData);
-    } catch (error) {
-        console.error('Erro ao atualizar taxa:', error);
-        return null;
-    }
+export async function atualizaTaxa(fee_id: number, formData: FormData): Promise<TaxaResponse> {
+    const { data } = await ApiService.put(`/fees/${fee_id}`, formData);
+    return data;
 }
 
-/**
- * Deleta uma taxa
- * @param fee_id - ID da taxa
- */
-export async function deletaTaxa(fee_id: number): Promise<responseDataDelete | null> {
-    try {
-        const response = await ApiService;
-        return response.delete(`/fees/${fee_id}`);
-    } catch (error) {
-        console.error('Erro ao deletar taxa:', error);
-        return null;
-    }
+export async function deletaTaxa(fee_id: number): Promise<DeleteResponse> {
+    const { data } = await ApiService.delete(`/fees/${fee_id}`);
+    return data.data;
 }

@@ -32,8 +32,8 @@ export default function IngredienteForm({ onSuccess, ingrediente_id }: FormIngre
     const fetchIngrediente = async (id: number) => {
         try {
             const response = await buscaIngrediente(id);
-            if (response?.data.data && response.data.data.length > 0) {
-                const ingrediente = response.data.data[0];
+            if (response) {
+                const ingrediente = response;
                 setName(ingrediente.name);
                 setQuantity(ingrediente.quantity);
                 setUnit(ingrediente.unit);
@@ -73,7 +73,7 @@ export default function IngredienteForm({ onSuccess, ingrediente_id }: FormIngre
                 ? await atualizaIngrediente(ingrediente_id, formData)
                 : await adicionaIngrediente(formData);
 
-            if (!response?.data.error) {
+            if (!response) {
                 setName('');
                 setQuantity('');
                 setUnit('kg');

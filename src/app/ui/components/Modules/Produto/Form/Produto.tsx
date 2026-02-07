@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { adicionaProdutos, atualizaProduto, buscaProduto } from "@/app/data/service/ProdutoService";
+import { adicionaProdutos, atualizaProduto } from "@/app/data/service/ProdutoService";
+import { useProduto } from "@/app/data/hooks/useProdutos";
+import { useCategorias } from "@/app/data/hooks/useCategorias";
 import { Box, Button, FormControl, FormControlLabel, InputLabel, MenuItem, Select, styled, Switch, TextField, Typography, Grid, Card, CardMedia } from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { buscaCategorias, Categoria } from "@/app/data/service/CategoriaService";
 import { UserLocalStorage } from "@/app/data/utils/const/User";
 import Image from "next/image";
 
@@ -22,51 +23,28 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
     const [image_path, setImagePath] = useState<File | null>(null);
     const [image_preview, setImagePreview] = useState<string | null>(null);
     const [error, setError] = useState('');
-    const [categorias, setCategorias] = useState<Categoria[]>([]);
 
     const userLocalStorage = UserLocalStorage();
-
     const restaurant_id = userLocalStorage?.restaurant_id;
 
-    const fetchCategorias = async () => {
-        try {
-            const response = await buscaCategorias();
-            if (response?.data) {
-                setCategorias(response.data.data);
-            }
-        } catch (err) {
-            console.error('Erro ao buscar categorias:', err);
-            setError('Erro ao buscar categorias');
-        }
-    };
-    const fetchProdutoId = async (product_id: number) => {
-        try {
-            const response = await buscaProduto(product_id);
-            if (response?.data.data && response.data.data.length > 0) {
-                const produto = response.data.data[0];
-                if (produto != null) {
-                    setCategoryId(produto.category_id)
-                    setDescription(produto.description)
-                    setPrice(produto.price)
-                    setStatus(produto.status_id)
-                    setName(produto.name)
-                }
-            }
-        } catch (err) {
-            console.error('Erro ao buscar produto:', err);
-            setError('Erro ao buscar produto');
-        }
-    };
-
+    // Usando hooks customizados
+    const { data: categorias } = useCategorias();
+    const { data: produto } = useProduto(produto_id);
     useEffect(() => {
-        fetchCategorias();
-    }, []);
-
-    useEffect(() => {
-        if (produto_id != null) {
-            fetchProdutoId(produto_id);
+        if (produto) {
+            setCategoryId(produto.category_id);
+            setDescription(produto.description);
+            setPrice(produto.price);
+            setStatus(produto.status_id);
+            setName(produto.name);
+        } else if (produto_id === null) {
+            setName('');
+            setCategoryId(null);
+            setDescription('');
+            setPrice('');
+            setStatus(null);
         }
-    }, [produto_id])
+    }, [produto, produto_id]);
 
     useEffect(() => {
         if (image_path) {
@@ -77,7 +55,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
                 window.URL.revokeObjectURL(url);
             };
         }
-    }, [image_path])
+    }, [image_path]);
 
     if (!userLocalStorage || userLocalStorage.restaurant_id === null) {
         return (
@@ -105,7 +83,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
 
         try {
             const response = await adicionaProdutos(formData);
-            if (!response?.data.error) {
+            if (!response.error) {
                 setName('');
                 setDescription('');
                 setPrice('');
@@ -115,7 +93,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
             }
         } catch (error) {
             console.error(error);
-            setError('Erro ao adicionar a produto.');
+            setError('Erro ao adicionar produto.');
         }
     };
     const handleEditaProduto = async (e: React.FormEvent) => {
@@ -135,7 +113,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
         if (produto_id) {
             try {
                 const response = await atualizaProduto(produto_id, formData);
-                if (!response?.data.error) {
+                if (!response.error) {
                     setName('');
                     setDescription('');
                     setPrice('');
@@ -145,7 +123,7 @@ export default function ProdutosForm({ onSuccess, produto_id }: FormProdutoProps
                 }
             } catch (error) {
                 console.error(error);
-                setError('Erro ao adicionar a produto.');
+                setError('Erro ao atualizar produto.');
             }
         }
     };

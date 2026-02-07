@@ -1,44 +1,7 @@
 'use client'
 import { ApiService } from "./ApiService";
 
-interface responseDataPagination {
-    data: DataClientePagination;
-}
-// Define a estrutura do retorno do serviço
-interface DataClientePagination {
-    data: ClientesPaginados;
-    message: string;
-    error: boolean;
-}
-export interface ClientesPaginados {
-    data: Array<Cliente>;
-    current_page: number;
-    first_page_url: string,
-    from: number,
-    last_page: number,
-    last_page_url: string,
-    links: Array<{
-        url: string | null,
-        label: string,
-        active: boolean
-    }>
-    next_page_url: string | null,
-    path: string,
-    per_page: number,
-    prev_page_url: string | null,
-    to: number,
-    total: number
-}
-interface responseData {
-    data: DataCliente;
-}
-interface responseDataDelete {
-    data: {
-        data: null,
-        error: boolean,
-        message: string
-    }
-}
+// Tipos exportados
 export interface Cliente {
     id: number;
     restaurant_id: string;
@@ -49,82 +12,76 @@ export interface Cliente {
     updated_at: Date;
 }
 
-// Define a estrutura do retorno do serviço
-interface DataCliente {
-    data: Array<Cliente>; // Agora sabemos que o array contém objetos do tipo Cliente
+export interface ClientesPaginados {
+    data: Array<Cliente>;
+    current_page: number;
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: Array<{
+        url: string | null;
+        label: string;
+        active: boolean;
+    }>;
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+}
+
+export interface ClienteResponse {
+    data: Cliente[];
     message: string;
     error: boolean;
 }
 
-export async function buscaClientes(): Promise<responseDataPagination | null> {
-    try {
-        const response = await ApiService;
-        return response.get('/clients');
-    } catch (error) {
-        console.error('Erro ao buscar cliente:', error);
-        return null;
-    }
+export interface DeleteResponse {
+    data: null;
+    error: boolean;
+    message: string;
 }
 
-export async function adicionaCliente(formData: FormData): Promise<{ data: DataCliente } | null> {
-    try {
-        const response = await ApiService;
-        return response.post('/clients', formData);
-
-    } catch (error) {
-        console.error('Erro ao adicionar cliente:', error);
-        return null;
-    }
+export interface IdentificarClienteResponse {
+    client_id: number;
+    masked_email?: string;
+    message?: string;
 }
 
-export async function buscaCliente(client_id: number): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.get('/clients/' + client_id);
-    } catch (error) {
-        console.error('Erro ao buscar cliente:', error);
-        return null;
-    }
+// Services - retornam apenas dados tratados
+export async function buscaClientes(): Promise<ClientesPaginados> {
+    const { data } = await ApiService.get('/clients');
+    return data.data;
 }
 
-export async function atualizaCliente(client_id: number, formData: FormData): Promise<responseData | null> {
-    try {
-        const response = await ApiService;
-        return response.put('/clients/' + client_id, formData);
-
-    } catch (error) {
-        console.error('Erro ao atualizar cliente: ', error);
-        return null;
-    }
-}
-export async function deletaCliente(client_id: number): Promise<responseDataDelete | null> {
-    try {
-        const response = await ApiService;
-        return response.delete('/clients/' + client_id);
-
-    } catch (error) {
-        console.error('Erro ao deletar cliente: ', error);
-        return null;
-    }
-}
-export async function identificaCliente(identifier: string, restaurant_id: string): Promise<{ client_id: number, masked_email?: string, message?: string } | null> {
-    try {
-        const response = await ApiService;
-        const res = await response.post('/clients/identify', { identifier, restaurant_id });
-        return res.data;
-    } catch (error) {
-        console.error('Erro ao identificar cliente:', error);
-        return null;
-    }
+export async function adicionaCliente(formData: FormData): Promise<ClienteResponse> {
+    const { data } = await ApiService.post('/clients', formData);
+    return data;
 }
 
-export async function verificaOtpCliente(client_id: number, restaurant_id: string, otp: string): Promise<{ data: Cliente } | null> {
-    try {
-        const response = await ApiService;
-        const res = await response.post('/clients/verify-otp', { client_id, restaurant_id, otp });
-        return res.data;
-    } catch (error) {
-        console.error('Erro ao verificar OTP:', error);
-        return null;
-    }
+export async function buscaCliente(client_id: number): Promise<Cliente> {
+    const { data } = await ApiService.get(`/clients/${client_id}`);
+    return data.data[0];
+}
+
+export async function atualizaCliente(client_id: number, formData: FormData): Promise<ClienteResponse> {
+    const { data } = await ApiService.put(`/clients/${client_id}`, formData);
+    return data;
+}
+
+export async function deletaCliente(client_id: number): Promise<DeleteResponse> {
+    const { data } = await ApiService.delete(`/clients/${client_id}`);
+    return data.data;
+}
+
+export async function identificaCliente(identifier: string, restaurant_id: string): Promise<IdentificarClienteResponse> {
+    const { data } = await ApiService.post('/clients/identify', { identifier, restaurant_id });
+    return data;
+}
+
+export async function verificaOtpCliente(client_id: number, restaurant_id: string, otp: string): Promise<Cliente> {
+    const { data } = await ApiService.post('/clients/verify-otp', { client_id, restaurant_id, otp });
+    return data.data;
 }

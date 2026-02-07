@@ -1,96 +1,68 @@
 'use client';
 
-import { buscaProdutos, deletaProduto, ProdutosPaginados } from '@/app/data/service/ProdutoService';
+import { deletaProduto } from '@/app/data/service/ProdutoService';
+import { useProdutos } from '@/app/data/hooks/useProdutos';
 import Produtos from '@/app/ui/components/Modules/Produto/Table/Produto';
 import ProdutosForm from '@/app/ui/components/Modules/Produto/Form/Produto';
 import ButtonCreateNew from '@/app/ui/components/itens/ButtonCreateNew';
 import ModalComponent from '@/app/ui/components/itens/ModalComponent';
 import { Close } from '@mui/icons-material';
 import { Alert, Collapse, IconButton, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Breadcrumb } from '@/app/ui/components/itens/Breadcrumb';
 
 export default function ProdutosPage() {
-  const [modalVisible, setModalVisible] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [openAlert, setOpenAlert] = useState<boolean>(false)
-  const [produto_id, setProdutoId] = useState<number | null>(null)
-  const [deletar_produto_id, setDeletarProdutoId] = useState<number | null>(null)
-  const [message_deletado, setMensagemDeletado] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState<number>(1)
-  const [produtos, setProdutos] = useState<ProdutosPaginados | null>(null);
-  const [error, setError] = useState(false);
-  
-    const handleClose=()=> {
-      setModalVisible(false)
-    }
-  
-    const handleEditar = (product_id:number) => {
-      if(confirm("Você deseja editar o produto?")) {
-        setProdutoId(product_id)
-        setModalVisible(true);
-      }
-    }
-    const handleExcluir = (product_id:number) => {
-      if(confirm("Você deseja excluir o produto?")) {
-        setDeletarProdutoId(product_id)
-        setOpenAlert(true)
-      }
-    }
-    const handlePageChange = (page:number) => {
-      setCurrentPage(page)
-    }
-  
-    const fetchProdutos = async () => {
-      try {
-        setLoading(true)
-        const response = await buscaProdutos(currentPage);
-        if (response && response?.data.data) {
-          setProdutos(response.data.data);
-          setModalVisible(false)
-        }
-        setLoading(false)
-      } catch (err) {
-        console.error('Erro ao buscar produtos:', err);
-        setError(true);
-      }
-    };
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [produto_id, setProdutoId] = useState<number | null>(null);
+  const [message_deletado, setMensagemDeletado] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-    const fetchDeletarProduto = async (produto_id:number) => {
+  // Usando o hook customizado
+  const { data: produtos, loading, error } = useProdutos(currentPage);
+
+  const handleClose = () => {
+    setModalVisible(false);
+  };
+
+  const handleEditar = (product_id: number) => {
+    if (confirm("Você deseja editar o produto?")) {
+      setProdutoId(product_id);
+      setModalVisible(true);
+    }
+  };
+
+  const handleExcluir = async (product_id: number) => {
+    if (confirm("Você deseja excluir o produto?")) {
       try {
-        setLoading(true)
-        const response = await deletaProduto(produto_id);
-        if(response && response?.data.data)  {
-          setMensagemDeletado(response.data.message);
-        }
-        setLoading(false)
-      } catch(e) {
+        const response = await deletaProduto(product_id);
+        setMensagemDeletado(response.message);
+        setOpenAlert(true);
+        setRefreshKey(prev => prev + 1); // Force refresh
+      } catch (e) {
         console.error("Erro ao deletar produto");
-        setError(true);
+        setMensagemDeletado("Erro ao deletar produto");
+        setOpenAlert(true);
       }
     }
-  
-    useEffect(() => { 
-      if(deletar_produto_id != null) {
-        fetchDeletarProduto(deletar_produto_id)
-      }
-      return () => {
-        setDeletarProdutoId(null)
-        setMensagemDeletado(null)
-        setOpenAlert(false)
-      }
-    }, [deletar_produto_id])
+  };
 
-    useEffect(() => {
-      fetchProdutos();
-    }, [currentPage]);
-  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleSuccess = () => {
+    setRefreshKey(prev => prev + 1);
+    setModalVisible(false);
+  };
+
   return (
     <div>
       <Typography variant='h2'>
         Produtos
       </Typography>
-      <Breadcrumb data_breadcrumb={[{label:'Produtos', link:'produtos'}]}/>
+      <Breadcrumb data_breadcrumb={[{ label: 'Produtos', link: 'produtos' }]} />
       <Collapse in={openAlert}>
         <Alert
           action={
@@ -110,13 +82,13 @@ export default function ProdutosPage() {
           {message_deletado}
         </Alert>
       </Collapse>
-      <p className='text-red-500 text-sm'>{error}</p>
+      {error && <p className='text-red-500 text-sm'>{error}</p>}
       <div>
-          <ButtonCreateNew description="Criar Novo produto" handleViewForm={() => {setModalVisible(!modalVisible); setProdutoId(null)}}/>
+        <ButtonCreateNew description="Criar Novo produto" handleViewForm={() => { setModalVisible(!modalVisible); setProdutoId(null) }} />
       </div>
-      <Produtos produtos={produtos} loading={loading} handleEditar={handleEditar} handleExcluir={handleExcluir} handlePageChange={handlePageChange}/>
+      <Produtos produtos={produtos} loading={loading} handleEditar={handleEditar} handleExcluir={handleExcluir} handlePageChange={handlePageChange} />
       <ModalComponent
-        content={<ProdutosForm onSuccess={fetchProdutos} produto_id={produto_id}/>}
+        content={<ProdutosForm onSuccess={handleSuccess} produto_id={produto_id} />}
         open={modalVisible}
         handleClose={handleClose}
       />

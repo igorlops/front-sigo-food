@@ -60,10 +60,10 @@ export default function MesasPage() {
     setLoading(true);
     try {
       const response = await buscarDashboardMesas();
-      if (response && !response.error && response.data) {
-        setTables(response.data.tables || []);
-        if (response.data.summary) {
-          setStats(response.data.summary);
+      if (response && !response.error && response) {
+        setTables(response || []);
+        if (response.summary) {
+          setStats(response.summary);
         }
       }
     } catch (error) {

@@ -1,14 +1,15 @@
 // authService.ts
 import { ApiService, WebService } from "./ApiService";
 
-export async function login(email: string, password: string) {
-  try {
-    await WebService.get('/sanctum/csrf-cookie');
-    const response = await ApiService.post('/login', { email, password });
-    return response.data;
+export interface LoginResponse {
+  data: any;
+  message: string;
+  error: boolean;
+}
 
-  } catch (error) {
-    console.error('Erro no login:', error);
-    throw error;
-  }
+// Service - retorna apenas dados tratados
+export async function login(email: string, password: string): Promise<LoginResponse> {
+  await WebService.get('/sanctum/csrf-cookie');
+  const { data } = await ApiService.post('/login', { email, password });
+  return data;
 }

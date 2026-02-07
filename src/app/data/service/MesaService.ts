@@ -1,6 +1,7 @@
 'use client'
 import { ApiService } from "./ApiService";
 
+// Tipos exportados
 export interface Mesa {
     id: number;
     table_number: string;
@@ -52,110 +53,63 @@ export interface DashboardResponse {
     tables: Mesa[];
 }
 
-interface ApiResponse<T> {
-    data: T;
-    message: string;
-    error: boolean;
-}
-
-export async function listarMesas(): Promise<ApiResponse<Mesa[]> | null> {
-    try {
-        const response = await ApiService;
-        const res = await response.get('/tables');
-        return res.data;
-    } catch (error) {
-        console.error('Erro ao listar mesas:', error);
-        return null;
-    }
-}
-
-export async function buscarDashboardMesas(): Promise<ApiResponse<DashboardResponse> | null> {
-    try {
-        const response = await ApiService;
-        const res = await response.get('/tables/dashboard');
-        return res.data;
-    } catch (error) {
-        console.error('Erro ao buscar dashboard de mesas:', error);
-        return null;
-    }
-}
-
-export async function verDetalhesMesa(id: number): Promise<ApiResponse<Mesa> | null> {
-    try {
-        const response = await ApiService;
-        const res = await response.get(`/tables/${id}`);
-        return res.data;
-    } catch (error) {
-        console.error('Erro ao buscar detalhes da mesa:', error);
-        return null;
-    }
-}
-
-export async function ocuparMesa(id: number, numberOfPeople: number): Promise<any> {
-    try {
-        const response = await ApiService;
-        const res = await response.post(`/tables/${id}/occupy`, {
-            number_of_people: numberOfPeople
-        });
-        return res.data;
-    } catch (error) {
-        console.error('Erro ao ocupar mesa:', error);
-        return null;
-    }
-}
-
-export async function liberarMesa(id: number): Promise<any> {
-    try {
-        const response = await ApiService;
-        const res = await response.post(`/tables/${id}/release`);
-        return res.data;
-    } catch (error) {
-        console.error('Erro ao liberar mesa:', error);
-        return null;
-    }
-}
-
-export async function alterarStatusMesa(id: number, status: string, additionalData: any = {}): Promise<any> {
-    try {
-        const response = await ApiService;
-        const res = await response.post(`/tables/${id}/change-status`, {
-            status,
-            ...additionalData
-        });
-        return res.data;
-    } catch (error) {
-        console.error('Erro ao alterar status da mesa:', error);
-        return null;
-    }
-}
-
-export async function fecharSessaoMesa(sessionId: number, paymentMethodId: number, notes?: string): Promise<any> {
-    try {
-        const response = await ApiService;
-        const res = await response.post(`/table-sessions/${sessionId}/close`, {
-            payment_method_id: paymentMethodId,
-            notes
-        });
-        return res.data;
-    } catch (error) {
-        console.error('Erro ao fechar sessão:', error);
-        return null;
-    }
-}
-
 export interface CriarMesaData {
     table_number: string;
     capacity: number;
     location: string;
 }
 
-export async function adicionarMesa(data: CriarMesaData): Promise<ApiResponse<Mesa> | null> {
-    try {
-        const response = await ApiService;
-        const res = await response.post('/tables', data);
-        return res.data;
-    } catch (error) {
-        console.error('Erro ao adicionar mesa:', error);
-        return null;
-    }
+export interface MesaResponse {
+    data: Mesa | Mesa[];
+    message: string;
+    error: boolean;
+}
+
+// Services - retornam apenas dados tratados
+export async function listarMesas(): Promise<Mesa[]> {
+    const { data } = await ApiService.get('/tables');
+    return data.data;
+}
+
+export async function buscarDashboardMesas(): Promise<DashboardResponse> {
+    const { data } = await ApiService.get('/tables/dashboard');
+    return data.data;
+}
+
+export async function verDetalhesMesa(id: number): Promise<Mesa> {
+    const { data } = await ApiService.get(`/tables/${id}`);
+    return data.data;
+}
+
+export async function ocuparMesa(id: number, numberOfPeople: number): Promise<any> {
+    const { data } = await ApiService.post(`/tables/${id}/occupy`, {
+        number_of_people: numberOfPeople
+    });
+    return data;
+}
+
+export async function liberarMesa(id: number): Promise<any> {
+    const { data } = await ApiService.post(`/tables/${id}/release`);
+    return data;
+}
+
+export async function alterarStatusMesa(id: number, status: string, additionalData: any = {}): Promise<any> {
+    const { data } = await ApiService.post(`/tables/${id}/change-status`, {
+        status,
+        ...additionalData
+    });
+    return data;
+}
+
+export async function fecharSessaoMesa(sessionId: number, paymentMethodId: number, notes?: string): Promise<any> {
+    const { data } = await ApiService.post(`/table-sessions/${sessionId}/close`, {
+        payment_method_id: paymentMethodId,
+        notes
+    });
+    return data;
+}
+
+export async function adicionarMesa(mesaData: CriarMesaData): Promise<Mesa> {
+    const { data } = await ApiService.post('/tables', mesaData);
+    return data.data;
 }

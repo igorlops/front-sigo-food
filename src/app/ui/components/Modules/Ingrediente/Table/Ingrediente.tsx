@@ -65,7 +65,7 @@ export default function IngredienteTable({
                         data={ingredientes?.data ?? []}
                     />
 
-                    {ingredientes && ingredientes.data.length > 0 && (
+                    {ingredientes && ingredientes.data?.length > 0 && (
                         <Box className="flex justify-center py-10">
                             <Pagination
                                 count={ingredientes?.last_page ?? 1}
