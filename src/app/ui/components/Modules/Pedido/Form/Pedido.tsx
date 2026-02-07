@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { adicionaProdutos, atualizaProduto, buscaProduto } from "@/app/data/service/ProdutoService";
-import { Box, Button, FormControl, FormControlLabel, InputLabel, MenuItem, Select, styled, Switch, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, FormControl, FormControlLabel, InputLabel, MenuItem, Select, styled, Switch, TextField, Typography } from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { buscaCategorias, Categoria } from "@/app/data/service/CategoriaService";
 import { UserLocalStorage } from "@/app/data/utils/const/User";
@@ -221,6 +221,18 @@ export default function PedidosForm({ onSuccess, pedido_id }: FormPedidoProps) {
                             <Switch checked={status === 'Ativo'} onChange={handleSwitch} name="status" />
                         }
                         label="Produto está ativo?"
+                    />
+                    <Autocomplete
+                        multiple
+                        limitTags={2}
+                        id="multiple-limit-tags"
+                        options={top100Films}
+                        getOptionLabel={(option) => option.title}
+                        defaultValue={[top100Films[13], top100Films[12], top100Films[11]]}
+                        renderInput={(params) => (
+                            <TextField {...params} label="limitTags" placeholder="Favorites" />
+                        )}
+                        sx={{ width: '500px' }}
                     />
                 </Box>
             </Box>

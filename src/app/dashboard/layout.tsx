@@ -93,6 +93,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   };
 
   const menuItems = [
+    { text: "Mesas", icon: <Restaurant />, path: "/dashboard/mesas" },
     { text: "Produtos", icon: <AddBox />, path: "/dashboard/produtos" },
     { text: "Categorias", icon: <Category />, path: "/dashboard/categorias" },
     { text: "Clientes", icon: <Groups />, path: "/dashboard/clientes" },

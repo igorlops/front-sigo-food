@@ -23,3 +23,4 @@ export * from './RestauranteService';
 export * from './StatusService';
 export * from './TaxaPedidoService';
 export * from './UsuarioService';
+export * from './MesaService';

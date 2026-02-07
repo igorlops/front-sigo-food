@@ -1029,6 +1029,276 @@
                 }
             ],
             "parentId": "folder_image_products"
+        },
+        {
+            "_id": "folder_tables",
+            "_type": "request_group",
+            "name": "🍽️ Mesas",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_tables_index",
+            "_type": "request",
+            "name": "Listar Mesas",
+            "method": "GET",
+            "url": "{{ _.base_url }}/tables",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_tables"
+        },
+        {
+            "_id": "req_tables_dashboard",
+            "_type": "request",
+            "name": "Dashboard de Mesas",
+            "method": "GET",
+            "url": "{{ _.base_url }}/tables/dashboard",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_tables"
+        },
+        {
+            "_id": "req_tables_store",
+            "_type": "request",
+            "name": "Criar Mesa",
+            "method": "POST",
+            "url": "{{ _.base_url }}/tables",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"table_number\": \"10\",\n  \"capacity\": 4,\n  \"location\": \"Salão Principal\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_tables"
+        },
+        {
+            "_id": "req_tables_show",
+            "_type": "request",
+            "name": "Ver Detalhes da Mesa",
+            "method": "GET",
+            "url": "{{ _.base_url }}/tables/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_tables"
+        },
+        {
+            "_id": "req_tables_update",
+            "_type": "request",
+            "name": "Atualizar Mesa",
+            "method": "PUT",
+            "url": "{{ _.base_url }}/tables/1",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"capacity\": 6\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_tables"
+        },
+        {
+            "_id": "req_tables_occupy",
+            "_type": "request",
+            "name": "Ocupar Mesa",
+            "method": "POST",
+            "url": "{{ _.base_url }}/tables/1/occupy",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"number_of_people\": 4\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_tables"
+        },
+        {
+            "_id": "req_tables_release",
+            "_type": "request",
+            "name": "Liberar Mesa",
+            "method": "POST",
+            "url": "{{ _.base_url }}/tables/1/release",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_tables"
+        },
+        {
+            "_id": "req_tables_change_status",
+            "_type": "request",
+            "name": "Alterar Status da Mesa",
+            "method": "POST",
+            "url": "{{ _.base_url }}/tables/1/change-status",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"status\": \"reserved\",\n  \"reserved_by\": \"João Silva\",\n  \"reserved_at\": \"2026-01-11 19:00:00\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_tables"
+        },
+        {
+            "_id": "req_tables_by_qr",
+            "_type": "request",
+            "name": "Buscar por QR Code",
+            "method": "GET",
+            "url": "{{ _.base_url }}/tables/qr/uuid-da-mesa",
+            "parentId": "folder_tables"
+        },
+        {
+            "_id": "req_tables_destroy",
+            "_type": "request",
+            "name": "Deletar Mesa",
+            "method": "DELETE",
+            "url": "{{ _.base_url }}/tables/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_tables"
+        },
+        {
+            "_id": "folder_table_sessions",
+            "_type": "request_group",
+            "name": "📊 Sessões de Mesas",
+            "parentId": "wrk_sigofood"
+        },
+        {
+            "_id": "req_table_sessions_index",
+            "_type": "request",
+            "name": "Listar Todas as Sessões",
+            "method": "GET",
+            "url": "{{ _.base_url }}/table-sessions",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_table_sessions"
+        },
+        {
+            "_id": "req_table_sessions_active",
+            "_type": "request",
+            "name": "Listar Sessões Ativas",
+            "method": "GET",
+            "url": "{{ _.base_url }}/table-sessions/active",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_table_sessions"
+        },
+        {
+            "_id": "req_table_sessions_show",
+            "_type": "request",
+            "name": "Ver Detalhes da Sessão",
+            "method": "GET",
+            "url": "{{ _.base_url }}/table-sessions/1",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_table_sessions"
+        },
+        {
+            "_id": "req_table_sessions_close",
+            "_type": "request",
+            "name": "Encerrar Sessão (Fechar Conta)",
+            "method": "POST",
+            "url": "{{ _.base_url }}/table-sessions/1/close",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"payment_method_id\": 1,\n  \"notes\": \"Pago em dinheiro\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "parentId": "folder_table_sessions"
+        },
+        {
+            "_id": "req_table_sessions_today",
+            "_type": "request",
+            "name": "Relatório de Hoje",
+            "method": "GET",
+            "url": "{{ _.base_url }}/table-sessions/today-report",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_table_sessions"
+        },
+        {
+            "_id": "req_table_sessions_report",
+            "_type": "request",
+            "name": "Relatório por Período",
+            "method": "GET",
+            "url": "{{ _.base_url }}/table-sessions/report?start_date=2026-01-01&end_date=2026-01-31",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parentId": "folder_table_sessions"
         }
     ]
 }
